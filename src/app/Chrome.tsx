@@ -2,13 +2,15 @@ import { motion } from "motion/react";
 import { NavLink } from "react-router";
 import { complement } from "../content";
 import type { Phase } from "../content/schema";
+import type { Role } from "../data/backend";
 import { formatShort, yearOf } from "../domain/dates";
 import { SettingsIcon } from "../ui/icons";
-import { HOME_PATH, sections } from "./sections";
+import { HOME_PATH, sectionsFor } from "./sections";
 
 const pillSpring = { type: "spring", stiffness: 420, damping: 34 } as const;
 
 interface ChromeProps {
+  role: Role;
   phase: Phase;
   onOpenSettings: () => void;
 }
@@ -47,11 +49,11 @@ export function TopBar({ phase, onOpenSettings }: ChromeProps) {
 }
 
 /** Barre d'onglets flottante, sur téléphone. Une pastille de verre glisse sous l'onglet actif. */
-export function TabBar() {
+export function TabBar({ role }: { role: Role }) {
   return (
     <nav className="tabbar lg:hidden" aria-label="Sections">
       <ul className="chrome flex w-full max-w-[480px] gap-0.5 rounded-[26px] p-1.5">
-        {sections.map(({ path, label, Icon }) => (
+        {sectionsFor(role).map(({ path, label, Icon }) => (
           <li key={path} className="min-w-0 flex-1">
             <NavLink to={path} end={path === HOME_PATH} className="tab">
               {({ isActive }) => (
@@ -76,7 +78,7 @@ export function TabBar() {
 }
 
 /** Rail latéral, sur ordinateur. */
-export function SideRail({ phase, onOpenSettings }: ChromeProps) {
+export function SideRail({ role, phase, onOpenSettings }: ChromeProps) {
   return (
     <aside className="chrome fixed top-4 bottom-4 left-4 z-20 hidden w-[232px] flex-col rounded-[28px] p-4 lg:flex">
       <div className="px-2 pt-2">
@@ -85,7 +87,7 @@ export function SideRail({ phase, onOpenSettings }: ChromeProps) {
 
       <nav className="mt-8" aria-label="Sections">
         <ul className="flex flex-col gap-1">
-          {sections.map(({ path, label, Icon }) => (
+          {sectionsFor(role).map(({ path, label, Icon }) => (
             <li key={path}>
               <NavLink to={path} end={path === HOME_PATH} className="tab tab--row">
                 {({ isActive }) => (

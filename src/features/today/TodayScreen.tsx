@@ -10,6 +10,7 @@ import { formatNumber } from "../../lib/format";
 import { FadeGauge } from "../../ui/FadeGauge";
 import { Panel } from "../../ui/Panel";
 import { TaskRow } from "../../ui/TaskRow";
+import { CoachWord } from "./CoachWord";
 
 const FIRSTS_SHOWN = 5;
 
@@ -37,10 +38,12 @@ export function TodayScreen() {
   return (
     <div className="grid gap-4 lg:grid-cols-12 lg:gap-5">
       <Hero journey={journey} className="lg:col-span-12 lg:mb-2" />
-      {!journey.canEdit && (
-        <p className="well px-4 py-3 text-[14px] text-muted lg:col-span-12">
-          Tu vois le suivi de {program.creatorName}. Lui seul peut cocher ses cases.
-        </p>
+      {journey.canEdit && (
+        <CoachWord
+          creatorId={program.creatorId}
+          coachName={program.coachName}
+          className="lg:col-span-12"
+        />
       )}
       {launched && <DayTasks journey={journey} className="lg:col-span-7 lg:row-span-2" />}
       <PhaseGoal journey={journey} className={launched ? "lg:col-span-5" : "lg:col-span-6"} />
@@ -89,7 +92,8 @@ function Hero({ journey, className }: SectionProps) {
   );
 }
 
-function DayTasks({ journey, className }: SectionProps) {
+/** La to-do du jour. En lecture seule pour le coach. */
+export function DayTasks({ journey, className }: SectionProps) {
   const { today, canEdit } = journey;
   const tasks = journey.tasksOn(today);
   const done = journey.doneOn(today);

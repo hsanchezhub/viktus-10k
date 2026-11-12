@@ -3,10 +3,10 @@ import { LoginScreen } from "../features/auth/LoginScreen";
 import { IdeasScreen } from "../features/ideas/IdeasScreen";
 import { MontageScreen } from "../features/montage/MontageScreen";
 import { PlanScreen } from "../features/plan/PlanScreen";
-import { TodayScreen } from "../features/today/TodayScreen";
 import { TrackingScreen } from "../features/tracking/TrackingScreen";
 import { AppShell } from "./AppShell";
 import { CrashScreen, NotFoundScreen } from "./Fallbacks";
+import { HomeScreen } from "./HomeScreen";
 import { LOGIN_PATH } from "./sections";
 
 // Sur GitHub Pages le site vit sous /viktus-10k/ : Vite fournit ce préfixe dans BASE_URL.
@@ -20,7 +20,7 @@ export const router = createBrowserRouter(
       element: <AppShell />,
       errorElement: <CrashScreen />,
       children: [
-        { index: true, element: <TodayScreen /> },
+        { index: true, element: <HomeScreen /> },
         { path: "plan", element: <PlanScreen /> },
         { path: "idees", element: <IdeasScreen /> },
         { path: "montage", element: <MontageScreen /> },

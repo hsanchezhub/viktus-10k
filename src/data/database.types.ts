@@ -47,6 +47,7 @@ export interface Database {
           views: number | null;
           shares: number | null;
           follows: number | null;
+          created_at: string;
         },
         {
           creator_id: string;
@@ -57,6 +58,27 @@ export interface Database {
           shares: number | null;
           follows: number | null;
         }
+      >;
+      coach_messages: Table<
+        {
+          id: string;
+          creator_id: string;
+          coach_id: string;
+          body: string;
+          created_at: string;
+          read_at: string | null;
+        },
+        { creator_id: string; body: string; read_at?: string | null }
+      >;
+      invitations: Table<
+        {
+          email: string;
+          role: string;
+          display_name: string;
+          invited_by: string | null;
+          expires_at: string;
+        },
+        { email: string; role: string; display_name: string; invited_by: string }
       >;
     };
     Views: Record<never, never>;

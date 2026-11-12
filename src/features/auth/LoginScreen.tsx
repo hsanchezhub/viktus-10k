@@ -11,7 +11,8 @@ type Mode = "signIn" | "signUp";
 
 const MIN_PASSWORD_LENGTH = 8;
 
-const failureMessages: Record<BackendErrorCode, string> = {
+// Les cas qui peuvent arriver à la connexion. Tout autre échec affiche le message « unknown ».
+const failureMessages: Partial<Record<BackendErrorCode, string>> & { unknown: string } = {
   invalid_credentials: "E-mail ou mot de passe incorrect.",
   not_invited: "Cette adresse n'est pas invitée. Demande à ton coach de t'ajouter.",
   already_registered: "Un compte existe déjà avec cette adresse. Connecte-toi.",
@@ -60,7 +61,7 @@ export function LoginScreen() {
       else await backend.signUp(email.trim(), password);
     } catch (error) {
       const code = error instanceof BackendError ? error.code : "unknown";
-      setFailure(failureMessages[code]);
+      setFailure(failureMessages[code] ?? failureMessages.unknown);
     } finally {
       setPending(false);
     }

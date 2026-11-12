@@ -2,12 +2,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import type { IsoDate } from "../domain/dates";
 import { useToast } from "../ui/Toast";
+import type { PhaseOverride } from "../domain/phases";
 import type { HookEntry, NewHook, Tracking } from "./backend";
 import { useBackend } from "./context";
 
 const workspaceKey = (userId: string) => ["workspace", userId] as const;
 const trackingKey = (creatorId: string | null) => ["tracking", creatorId] as const;
 const TRACKING_WRITE = ["tracking-write"] as const;
+const messagesKey = (creatorId: string) => ["messages", creatorId] as const;
+const invitationKey = (coachId: string) => ["invitation", coachId] as const;
+const MESSAGES_REFRESH_MS = 60_000;
 
 export function useWorkspace(userId: string) {
   const backend = useBackend();
@@ -125,4 +129,70 @@ export function useTrackingWrites(creatorId: string | null): TrackingWrites {
         }),
     };
   }, [backend, creatorId, queryClient, mutateAsync]);
+}
+
+/** Les messages du coach. Relus chaque minute : un nouveau message apparaît sans recharger la page. */
+export function useMessages(creatorId: string) {
+  const backend = useBackend();
+  return useQuery({
+    queryKey: messagesKey(creatorId),
+    queryFn: () => backend.loadMessages(creatorId),
+    refetchInterval: MESSAGES_REFRESH_MS,
+  });
+}
+
+/** Côté créateur : signale au coach que ses messages ont été vus. */
+export function useMarkMessagesRead(creatorId: string) {
+  const backend = useBackend();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => backend.markMessagesRead(creatorId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: messagesKey(creatorId) }),
+  });
+}
+
+/** Côté coach : écrire et supprimer un message, forcer la phase. */
+export function useCoachWrites(creatorId: string, coachId: string) {
+  const backend = useBackend();
+  const queryClient = useQueryClient();
+  const refreshMessages = () => queryClient.invalidateQueries({ queryKey: messagesKey(creatorId) });
+
+  const sendMessage = useMutation({
+    mutationFn: (body: string) => backend.sendMessage(creatorId, body),
+    onSuccess: refreshMessages,
+  });
+  const deleteMessage = useMutation({
+    mutationFn: (messageId: string) => backend.deleteMessage(messageId),
+    onSuccess: refreshMessages,
+  });
+  const setPhaseOverride = useMutation({
+    mutationFn: (override: PhaseOverride | null) => backend.setPhaseOverride(creatorId, override),
+    // La phase forcée fait partie du programme, chargé avec le profil.
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: workspaceKey(coachId) }),
+  });
+
+  return { sendMessage, deleteMessage, setPhaseOverride };
+}
+
+/** L'invitation en attente du coach, tant que son créateur n'a pas créé son compte. */
+export function useInvitation(coachId: string) {
+  const backend = useBackend();
+  const queryClient = useQueryClient();
+  const refresh = () => queryClient.invalidateQueries({ queryKey: invitationKey(coachId) });
+
+  const invitation = useQuery({
+    queryKey: invitationKey(coachId),
+    queryFn: () => backend.loadInvitation(coachId),
+  });
+  const invite = useMutation({
+    mutationFn: ({ email, displayName }: { email: string; displayName: string }) =>
+      backend.inviteCreator(coachId, email, displayName),
+    onSuccess: refresh,
+  });
+  const cancel = useMutation({
+    mutationFn: (email: string) => backend.cancelInvitation(email),
+    onSuccess: refresh,
+  });
+
+  return { invitation, invite, cancel };
 }

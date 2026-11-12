@@ -162,3 +162,20 @@ export function LogoutIcon(props: IconProps) {
     </Icon>
   );
 }
+
+export function CoachIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M12 3 4 6v6c0 4.4 3.4 8.3 8 9 4.6-.7 8-4.6 8-9V6z" />
+      <path d="m9 12 2 2 4-4" />
+    </Icon>
+  );
+}
+
+export function SendIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M4 12 20 4l-6 16-3-7z" />
+    </Icon>
+  );
+}

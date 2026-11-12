@@ -96,3 +96,21 @@ export function formatLong(date: IsoDate): string {
 export function monthLabel(date: IsoDate): string {
   return MONTHS[splitIso(date).month - 1] ?? "";
 }
+
+const parisMoment = new Intl.DateTimeFormat("fr-FR", {
+  timeZone: "Europe/Paris",
+  day: "numeric",
+  month: "short",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+/** « 12 nov., 16:40 » : un instant précis, à l'heure de Paris. */
+export function formatMoment(timestamp: string): string {
+  return parisMoment.format(new Date(timestamp));
+}
+
+/** Le jour, à Paris, où un instant a eu lieu. */
+export function parisDayOf(timestamp: string): IsoDate {
+  return todayInParis(new Date(timestamp));
+}

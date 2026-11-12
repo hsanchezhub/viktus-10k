@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { contenu } from "../content";
 import { addDays } from "./dates";
 import { phaseNumberAt } from "./phases";
-import { dayRatio, streak, weekPublications } from "./progress";
+import { completionOver, dayRatio, lastDays, streak, weekPublications } from "./progress";
 import { plannedTasks } from "./tasks";
 import { isWinningHook, targetAt } from "./target";
 
@@ -96,5 +96,20 @@ describe("isWinningHook", () => {
     expect(isWinningHook(6900, audit.median12)).toBe(true);
     expect(isWinningHook(6899, audit.median12)).toBe(false);
     expect(isWinningHook(null, audit.median12)).toBe(false);
+  });
+});
+
+describe("completionOver et lastDays", () => {
+  it("liste les derniers jours du plus ancien au plus récent", () => {
+    expect(lastDays("2026-11-18", 3)).toEqual(["2026-11-16", "2026-11-17", "2026-11-18"]);
+  });
+
+  it("compte les tâches faites et prévues, sans rien avant le lancement", () => {
+    // Du 12 au 18 novembre : seuls les 16 (2 tâches), 17 (5) et 18 (4) comptent.
+    const { doneOn } = journal({ "2026-11-16": 1, "2026-11-17": 0.6 });
+    expect(completionOver(lastDays("2026-11-18", 7), tasksOn, doneOn)).toEqual({
+      done: 5,
+      total: 11,
+    });
   });
 });

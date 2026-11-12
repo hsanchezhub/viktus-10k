@@ -49,9 +49,33 @@ export interface Tracking {
   /** Abonnés relevés, par jour. */
   followers: Record<IsoDate, number>;
   hooks: HookEntry[];
+  /** Dernière fois que le créateur a enregistré quelque chose. null s'il n'a encore rien saisi. */
+  lastActivityAt: string | null;
 }
 
-export const emptyTracking: Tracking = { days: {}, firsts: {}, followers: {}, hooks: [] };
+export const emptyTracking: Tracking = {
+  days: {},
+  firsts: {},
+  followers: {},
+  hooks: [],
+  lastActivityAt: null,
+};
+
+/** Un retour du coach à son créateur. */
+export interface CoachMessage {
+  id: string;
+  body: string;
+  createdAt: string;
+  /** null tant que le créateur ne l'a pas vu. */
+  readAt: string | null;
+}
+
+/** L'invitation en attente d'un créateur : il peut créer son compte avec cette adresse. */
+export interface Invitation {
+  email: string;
+  displayName: string;
+  expiresAt: string;
+}
 
 export type BackendErrorCode =
   | "invalid_credentials"
@@ -59,6 +83,7 @@ export type BackendErrorCode =
   | "already_registered"
   | "weak_password"
   | "signup_closed"
+  | "already_invited"
   | "network"
   | "unknown";
 
@@ -89,4 +114,19 @@ export interface Backend {
   saveFollowers(creatorId: string, day: IsoDate, followers: number): Promise<void>;
   addHook(creatorId: string, hook: NewHook): Promise<HookEntry>;
   deleteHook(hookId: string): Promise<void>;
+
+  /** Les messages du coach, du plus récent au plus ancien. */
+  loadMessages(creatorId: string): Promise<CoachMessage[]>;
+  sendMessage(creatorId: string, body: string): Promise<void>;
+  deleteMessage(messageId: string): Promise<void>;
+  /** Le créateur a vu ses messages : tous ceux qui ne l'étaient pas passent à « lu ». */
+  markMessagesRead(creatorId: string): Promise<void>;
+
+  /** L'invitation que le coach a envoyée et qui n'a pas encore servi. */
+  loadInvitation(coachId: string): Promise<Invitation | null>;
+  inviteCreator(coachId: string, email: string, displayName: string): Promise<void>;
+  cancelInvitation(email: string): Promise<void>;
+
+  /** Force la phase à partir d'une date, ou revient au calendrier avec null. */
+  setPhaseOverride(creatorId: string, override: PhaseOverride | null): Promise<void>;
 }

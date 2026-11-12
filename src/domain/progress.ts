@@ -56,3 +56,33 @@ export function weekPublications(
   }
   return { done, planned };
 }
+
+/** Les `count` derniers jours, du plus ancien au plus récent, aujourd'hui compris. */
+export function lastDays(today: IsoDate, count: number): IsoDate[] {
+  return Array.from({ length: count }, (_, index) => addDays(today, index - count + 1));
+}
+
+export interface Completion {
+  done: number;
+  total: number;
+}
+
+/** Tâches faites et prévues sur une liste de jours. */
+export function completionOver(
+  days: readonly IsoDate[],
+  tasksOn: (day: IsoDate) => readonly PlannedTask[],
+  doneOn: (day: IsoDate) => ReadonlySet<string>,
+): Completion {
+  let done = 0;
+  let total = 0;
+  for (const day of days) {
+    const tasks = tasksOn(day);
+    const doneThatDay = doneOn(day);
+    total += tasks.length;
+    done += tasks.filter((task) => doneThatDay.has(task.id)).length;
+  }
+  return { done, total };
+}
+
+/** Au-delà de ce nombre de jours sans activité, le coach est invité à relancer. */
+export const INACTIVITY_ALERT_DAYS = 3;

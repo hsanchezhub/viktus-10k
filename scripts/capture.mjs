@@ -64,6 +64,21 @@ const demoState = {
     },
   ],
   sessionUserId: "demo-creator",
+  phaseOverride: null,
+  messages: [
+    {
+      id: "m2",
+      body: "Ton essai de mercredi passe les 7 000 vues : garde ce hook et refais-le sur une autre coupe samedi.",
+      createdAt: "2026-11-26T07:40:00Z",
+      readAt: null,
+    },
+    {
+      id: "m1",
+      body: "Semaine 1 tenue de bout en bout. Pense à relever tes abonnés lundi.",
+      createdAt: "2026-11-22T18:05:00Z",
+      readAt: "2026-11-22T19:30:00Z",
+    },
+  ],
   tracking: {
     days: {
       ...Object.fromEntries(pastDays.map((day) => [day, EVERY_TASK])),
@@ -78,6 +93,7 @@ const demoState = {
       f_claude: "2026-11-16",
     },
     followers: { "2026-11-16": 652, "2026-11-23": 688 },
+    lastActivityAt: "2026-11-26T07:10:00Z",
     hooks: [
       {
         id: "h1",
@@ -113,6 +129,8 @@ const demoState = {
 // scroll : part de la page défilée avant la capture (0 = haut de page).
 const shots = [
   { name: "connexion", path: "connexion", scroll: 0, signedOut: true },
+  { name: "coach", path: "", scroll: 0, as: "demo-coach" },
+  { name: "coach-suite", path: "", scroll: 0.7, as: "demo-coach" },
   { name: "aujourdhui", path: "", scroll: 0 },
   { name: "aujourdhui-suite", path: "", scroll: 0.75 },
   { name: "suivi", path: "suivi", scroll: 0 },
@@ -158,7 +176,12 @@ try {
             localStorage.setItem("viktus:theme", chosenTheme);
             if (state) localStorage.setItem("viktus:demo", state);
           },
-          [theme, shot.signedOut ? null : JSON.stringify(demoState)],
+          [
+            theme,
+            shot.signedOut
+              ? null
+              : JSON.stringify({ ...demoState, sessionUserId: shot.as ?? demoState.sessionUserId }),
+          ],
         );
         const page = await context.newPage();
         await page.clock.setFixedTime(new Date(`${TODAY}T09:00:00+01:00`));

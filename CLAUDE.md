@@ -139,14 +139,14 @@ Source : documentation « Instagram API with Instagram Login » sur developers.f
 
 ### Où on en est
 
-- **Étape 1, socle** : validée par Hugo le 12 novembre (« c'est bien »).
-- **Étape 2, comptes et données** : construite le 12 novembre, en attente du feu vert d'Hugo. Connexion, écran Aujourd'hui, écran Suivi, réglages, logique métier testée contre `exemplesTodo`. Le coach voit le suivi en lecture seule.
-- **Supabase** : projet `viktus-10k` (référence `jcyufnhhfgfinoaapsha`, région Paris, offre gratuite), créé via le connecteur Supabase de Claude. Migration dans `supabase/migrations/`, règles d'accès vérifiées par `supabase/tests/acces.sql` (à rejouer après chaque migration). Le compte coach d'Hugo est créé. L'e-mail de Victor reste à inviter.
-- **À faire par Hugo dans Supabase** : Authentication > Sign In / Providers > Email, désactiver « Confirm email ». Sans ça, la création de compte répond « pas encore ouverte ».
-- **Pas encore vérifié** : la connexion réelle contre Supabase (les parcours automatiques tournent sur un backend en mémoire, `VITE_BACKEND=memory`). Le premier compte créé par Hugo servira de test. Rendu jamais vu sur un vrai iPhone.
-- **Pas encore en ligne** : il manque la connexion à GitHub (`gh` n'est pas installé sur ce Mac, git n'a pas d'identité). Rien n'est commité. À la mise en ligne, renseigner `VITE_SUPABASE_URL` et `VITE_SUPABASE_KEY` comme variables du dépôt GitHub.
-- **Reste pour l'installation** : écrans de démarrage iOS et service worker, prévus avec le hors ligne et les rappels.
-- **Étape 3** : coaching (messages d'Hugo, écran Coach, invitation de Victor depuis le site).
+- **En ligne** depuis le 12 novembre : https://hsanchezhub.github.io/viktus-10k/ (dépôt public `hsanchezhub/viktus-10k`). Chaque envoi sur `main` relance les tests puis la mise en ligne (`.github/workflows/deploy.yml`). L'adresse et la clé publique Supabase sont des variables du dépôt GitHub.
+- **Étape 1, socle** : validée par Hugo.
+- **Étape 2, comptes et données** : faite. Connexion, Aujourd'hui, Suivi, réglages. Vérifiée en vrai : Hugo a créé son compte coach.
+- **Étape 3, coaching** : construite le 12 novembre, en attente du feu vert d'Hugo. L'accueil du coach est l'écran Coach : chiffres clés, messages à Victor (avec « Lu » ou « Pas encore lu »), to-do du jour en lecture seule, 28 derniers jours, phase forcée, derniers hooks. Tant que Victor n'a pas de compte, cet écran sert à l'inviter. Côté Victor, le dernier message s'affiche en haut d'Aujourd'hui (« Le mot de Hugo »), avec l'historique.
+- **Supabase** : projet `viktus-10k` (référence `jcyufnhhfgfinoaapsha`, région Paris, offre gratuite), géré via le connecteur Supabase de Claude. Migrations dans `supabase/migrations/`. Règles d'accès vérifiées par `supabase/tests/acces.sql` et `supabase/tests/coaching.sql`, à rejouer après chaque migration. « Confirm email » est désactivé (sinon la création de compte est refusée).
+- **Reste à faire par Hugo** : inviter Victor depuis l'écran Coach dès qu'il a son e-mail, puis lui envoyer l'adresse du site.
+- **Pas encore vérifié** : le rendu sur un vrai iPhone. Les parcours automatiques tournent sur un backend en mémoire (`VITE_BACKEND=memory`), pas sur Supabase.
+- **Étape 4, à venir** : notifications (nouveau message du coach, rappels), hors ligne, écrans de démarrage iOS.
 
 ### Commandes
 

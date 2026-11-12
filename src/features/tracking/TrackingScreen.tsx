@@ -9,6 +9,7 @@ import { formatNumber } from "../../lib/format";
 import { TrashIcon } from "../../ui/icons";
 import { Panel, PanelTitle } from "../../ui/Panel";
 import { ScreenHeader } from "../../ui/ScreenHeader";
+import { StatTile } from "../../ui/StatTile";
 import { TaskRow } from "../../ui/TaskRow";
 import { FollowersChart } from "./FollowersChart";
 import { FollowersForm, HookForm } from "./forms";
@@ -34,15 +35,19 @@ export function TrackingScreen() {
 
       <div className="grid gap-4 lg:grid-cols-12 lg:gap-5">
         <dl className="grid grid-cols-3 gap-3 lg:col-span-12 lg:gap-5">
-          <Stat
+          <StatTile
             value={formatNumber(followers.value)}
             label="abonnés"
             detail={
               followers.fromAudit ? "audit du 12 nov." : `relevé du ${formatShort(followers.day)}`
             }
           />
-          <Stat value={String(streak)} label="jours de série" detail="journées à 60 % ou plus" />
-          <Stat
+          <StatTile
+            value={String(streak)}
+            label="jours de série"
+            detail="journées à 60 % ou plus"
+          />
+          <StatTile
             value={`${weekPublications.done}/${weekPublications.planned}`}
             label="publications cette semaine"
             detail="reels et essais"
@@ -90,18 +95,6 @@ export function TrackingScreen() {
         </Panel>
       </div>
     </>
-  );
-}
-
-function Stat({ value, label, detail }: { value: string; label: string; detail: string }) {
-  return (
-    <Panel as="div" className="flex min-w-0 flex-col-reverse justify-end gap-1 !p-3.5 lg:!p-5">
-      <dt className="text-[12.5px] leading-tight font-semibold text-muted">
-        {label}
-        <span className="mt-0.5 block font-normal">{detail}</span>
-      </dt>
-      <dd className="display text-[30px] tabular-nums lg:text-[52px]">{value}</dd>
-    </Panel>
   );
 }
 

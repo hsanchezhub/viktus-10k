@@ -59,7 +59,7 @@ test("le coach lit le suivi du créateur sans pouvoir le modifier", async ({ pag
   await signedIn(page, "coach", { days: { "2026-11-17": ["kit"] } });
   await page.goto("./");
 
-  await expect(page.getByText("Tu vois le suivi de Victor")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Coach" })).toBeVisible();
   const kit = page.getByRole("checkbox", { name: /Filmer le kit 4 plans/ });
   await expect(kit).toBeChecked();
   await expect(kit).toBeDisabled();

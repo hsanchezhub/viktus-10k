@@ -3,6 +3,7 @@ import {
   type Account,
   type Backend,
   BackendError,
+  emptyTracking,
   type HookEntry,
   type HookKind,
   type Role,
@@ -50,7 +51,7 @@ function dataFailure(error: { message: string }): BackendError {
   return new BackendError(isNetworkFailure(error) ? "network" : "unknown", error.message);
 }
 
-function toHook(row: Tables["hooks"]["Row"]): HookEntry {
+function toHook(row: Omit<Tables["hooks"]["Row"], "created_at">): HookEntry {
   return {
     id: row.id,
     day: row.day,
@@ -148,22 +149,33 @@ export function createSupabaseBackend(): Backend {
 
     async loadTracking(creatorId) {
       const [days, firsts, followers, hooks] = await Promise.all([
-        client.from("day_logs").select("day, done").eq("creator_id", creatorId),
+        client.from("day_logs").select("day, done, updated_at").eq("creator_id", creatorId),
         client.from("firsts").select("key, done_on").eq("creator_id", creatorId),
-        client.from("follower_stats").select("day, followers").eq("creator_id", creatorId),
+        client
+          .from("follower_stats")
+          .select("day, followers, updated_at")
+          .eq("creator_id", creatorId),
         client
           .from("hooks")
-          .select("id, creator_id, day, kind, hook, views, shares, follows")
+          .select("id, creator_id, day, kind, hook, views, shares, follows, created_at")
           .eq("creator_id", creatorId),
       ]);
       const failure = days.error ?? firsts.error ?? followers.error ?? hooks.error;
       if (failure) throw dataFailure(failure);
 
-      const tracking: Tracking = { days: {}, firsts: {}, followers: {}, hooks: [] };
+      const tracking: Tracking = { ...emptyTracking, days: {}, firsts: {}, followers: {} };
       for (const row of days.data ?? []) tracking.days[row.day] = row.done;
       for (const row of firsts.data ?? []) tracking.firsts[row.key] = row.done_on;
       for (const row of followers.data ?? []) tracking.followers[row.day] = row.followers;
       tracking.hooks = (hooks.data ?? []).map(toHook);
+
+      // Dernière activité : la saisie la plus récente, toutes tables confondues.
+      const stamps = [
+        ...(days.data ?? []).map((row) => row.updated_at),
+        ...(followers.data ?? []).map((row) => row.updated_at),
+        ...(hooks.data ?? []).map((row) => row.created_at),
+      ];
+      tracking.lastActivityAt = stamps.sort().at(-1) ?? null;
       return tracking;
     },
 
@@ -205,6 +217,81 @@ export function createSupabaseBackend(): Backend {
 
     async deleteHook(hookId) {
       const { error } = await client.from("hooks").delete().eq("id", hookId);
+      if (error) throw dataFailure(error);
+    },
+
+    async loadMessages(creatorId) {
+      const { data, error } = await client
+        .from("coach_messages")
+        .select("id, body, created_at, read_at")
+        .eq("creator_id", creatorId)
+        .order("created_at", { ascending: false });
+      if (error) throw dataFailure(error);
+      return data.map((row) => ({
+        id: row.id,
+        body: row.body,
+        createdAt: row.created_at,
+        readAt: row.read_at,
+      }));
+    },
+
+    async sendMessage(creatorId, body) {
+      // L'auteur (coach_id) est rempli par la base avec le compte connecté.
+      const { error } = await client.from("coach_messages").insert({ creator_id: creatorId, body });
+      if (error) throw dataFailure(error);
+    },
+
+    async deleteMessage(messageId) {
+      const { error } = await client.from("coach_messages").delete().eq("id", messageId);
+      if (error) throw dataFailure(error);
+    },
+
+    async markMessagesRead(creatorId) {
+      const { error } = await client
+        .from("coach_messages")
+        .update({ read_at: new Date().toISOString() })
+        .eq("creator_id", creatorId)
+        .is("read_at", null);
+      if (error) throw dataFailure(error);
+    },
+
+    async loadInvitation(coachId) {
+      const { data, error } = await client
+        .from("invitations")
+        .select("email, display_name, expires_at")
+        .eq("invited_by", coachId)
+        .limit(1)
+        .maybeSingle();
+      if (error) throw dataFailure(error);
+      if (!data) return null;
+      return { email: data.email, displayName: data.display_name, expiresAt: data.expires_at };
+    },
+
+    async inviteCreator(coachId, email, displayName) {
+      const { error } = await client.from("invitations").insert({
+        email: email.toLowerCase(),
+        role: "creator",
+        display_name: displayName,
+        invited_by: coachId,
+      });
+      // 23505 : cette adresse a déjà une invitation en attente.
+      if (error?.code === "23505") throw new BackendError("already_invited", error.message);
+      if (error) throw dataFailure(error);
+    },
+
+    async cancelInvitation(email) {
+      const { error } = await client.from("invitations").delete().eq("email", email);
+      if (error) throw dataFailure(error);
+    },
+
+    async setPhaseOverride(creatorId, override) {
+      const { error } = await client
+        .from("programs")
+        .update({
+          forced_phase: override?.phase ?? null,
+          forced_phase_from: override?.from ?? null,
+        })
+        .eq("creator_id", creatorId);
       if (error) throw dataFailure(error);
     },
   };

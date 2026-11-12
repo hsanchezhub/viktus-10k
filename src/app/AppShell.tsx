@@ -63,8 +63,8 @@ function Frame({ account }: { account: Account }) {
       <a className="skip-link" href="#contenu">
         Aller au contenu
       </a>
-      <TopBar phase={phase} onOpenSettings={openSettings} />
-      <SideRail phase={phase} onOpenSettings={openSettings} />
+      <TopBar role={workspace.role} phase={phase} onOpenSettings={openSettings} />
+      <SideRail role={workspace.role} phase={phase} onOpenSettings={openSettings} />
 
       <main id="contenu" className="app-main">
         <motion.div
@@ -78,7 +78,7 @@ function Frame({ account }: { account: Account }) {
         </motion.div>
       </main>
 
-      <TabBar />
+      <TabBar role={workspace.role} />
       <SettingsSheet
         open={settingsOpen}
         onClose={() => setSettingsOpen(false)}

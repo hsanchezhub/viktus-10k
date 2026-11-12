@@ -37,6 +37,24 @@ export interface DemoTracking {
   }>;
 }
 
+export interface DemoExtra {
+  /** Le coach est seul : son créateur n'a pas encore de compte. */
+  withoutCreator?: boolean;
+  messages?: Array<{ id: string; body: string; createdAt: string; readAt: string | null }>;
+}
+
+/** Change le compte connecté, comme si l'autre personne ouvrait le site sur le même appareil. */
+export async function switchTo(page: Page, as: "creator" | "coach") {
+  await page.evaluate(
+    ([key, userId]) => {
+      const state = JSON.parse(localStorage.getItem(key) ?? "{}");
+      localStorage.setItem(key, JSON.stringify({ ...state, sessionUserId: userId }));
+    },
+    [DEMO_STORAGE_KEY, as === "creator" ? victor.id : hugo.id] as const,
+  );
+  await page.goto("./");
+}
+
 /**
  * Ouvre le site avec les deux comptes déjà créés et `as` connecté.
  * L'état n'est posé qu'une fois : un rechargement de page garde ce que le test a modifié.
@@ -45,12 +63,15 @@ export async function signedIn(
   page: Page,
   as: "creator" | "coach" = "creator",
   tracking: DemoTracking = {},
+  extra: DemoExtra = {},
 ) {
   const state = {
     invitations: [],
-    users: [victor, hugo],
+    users: extra.withoutCreator ? [hugo] : [victor, hugo],
     sessionUserId: as === "creator" ? victor.id : hugo.id,
     tracking: { days: {}, firsts: {}, followers: {}, hooks: [], ...tracking },
+    messages: extra.messages ?? [],
+    phaseOverride: null,
   };
   await page.addInitScript(
     ([key, value]) => {
