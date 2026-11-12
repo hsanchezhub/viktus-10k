@@ -1,0 +1,271 @@
+{
+  "_note": "Textes du plan de Victor qui n'existaient que dans le prototype, repris tels quels le 12 novembre 2026. Seule la partie montage est adaptée à Claude Code sur ordinateur.",
+  "site": {
+    "nom": "Viktus Barber",
+    "objectif": "Objectif 10K abonnés"
+  },
+  "taches": {
+    "kit": {
+      "titre": "Filmer le kit 4 plans sur le client du jour",
+      "aide": "Avant 3 s, process 15 s, reveal 5 s, réaction 5 s. Demande d'abord l'accord du client.",
+      "lien": "montage"
+    },
+    "post_tue": {
+      "titre": "Publier le reel Transfo",
+      "aide": "Entre 12h et 13h ou entre 18h30 et 20h. Géolocalise The Barbers Illkirch, « Strasbourg » dans la légende.",
+      "lien": "idees"
+    },
+    "post_wed": {
+      "titre": "Publier un reel",
+      "aide": "Idéalement un concept Interaction ou une collab.",
+      "lien": "idees"
+    },
+    "trial_wed": {
+      "titre": "Publier un réel d'essai",
+      "aide": "Une vraie variante avec un autre hook, jamais le même fichier.",
+      "lien": "idees"
+    },
+    "post_thu": {
+      "titre": "Publier le reel Interaction ou Émotion",
+      "aide": "Termine par une question. Réponds à chaque commentaire dans l'heure.",
+      "lien": "idees"
+    },
+    "mep": {
+      "titre": "Séquence MEP en stories",
+      "aide": "Montrer, Expliquer, Proposer : finis par un sondage « Tu veux un créneau cette semaine ? ».",
+      "lien": "plan"
+    },
+    "facecam": {
+      "titre": "Filmer 30 s face caméra pour le Défi 10K",
+      "aide": "Où tu en es, ce que tu as appris cette semaine."
+    },
+    "trial_fri": {
+      "titre": "Publier un réel d'essai",
+      "aide": "Teste un hook du carnet que tu n'as pas encore essayé.",
+      "lien": "idees"
+    },
+    "post_sat": {
+      "titre": "Publier le reel du samedi",
+      "aide": "La meilleure coupe de la semaine, ou l'épisode du Défi 10K.",
+      "lien": "idees"
+    },
+    "carousel": {
+      "titre": "Publier un carrousel avant/après",
+      "aide": "5 à 8 photos, la plus forte en premier.",
+      "lien": "idees"
+    },
+    "stories": {
+      "titre": "3 stories : ta vie, le salon, un conseil",
+      "aide": "Ne fake rien : la vraie journée.",
+      "lien": "plan"
+    },
+    "reply": {
+      "titre": "Répondre à tous les commentaires et messages",
+      "aide": "Dans l'heure qui suit une publication."
+    },
+    "source": {
+      "titre": "Demander aux nouveaux clients : « tu m'as trouvé comment ? »",
+      "aide": "Note les réponses Instagram dans Suivi le lundi."
+    },
+    "edit": {
+      "titre": "Session montage d'1 heure avec Claude",
+      "aide": "Monter les reels de la semaine et leurs variantes, puis tout programmer.",
+      "lien": "montage"
+    },
+    "log": {
+      "titre": "Noter les résultats des reels dans le carnet des hooks",
+      "aide": "Vues et partages à 72 h.",
+      "lien": "suivi"
+    },
+    "followers": {
+      "titre": "Relever ton nombre d'abonnés dans Suivi",
+      "aide": "1 minute, ça nourrit la courbe.",
+      "lien": "suivi"
+    },
+    "story_mon": {
+      "titre": "1 story de ta vie hors salon",
+      "aide": "Jour de repos, mais on reste présent."
+    },
+    "sell": {
+      "titre": "Jour de vente : « il reste X créneaux »",
+      "aide": "Reel ou stories avec le lien de réservation.",
+      "lien": "idees"
+    },
+    "review": {
+      "titre": "Revue du mois (20 min) et capture du profil",
+      "aide": "La capture va dans l'album ARCHIVE 10K.",
+      "lien": "suivi"
+    }
+  },
+  "aujourdhui": {
+    "avantLancement": "D'ici là, attaque les premières fois ci-dessous : profil, setup, compte Claude, Jour Zéro.",
+    "premieresFois": "Chacune se fête en story. Elles restent ici jusqu'à ce qu'elles soient toutes cochées."
+  },
+  "suivi": {
+    "carnet": "Note chaque reel 72 h après : c'est comme ça qu'on trouve tes meilleurs hooks.",
+    "revueDuMois": [
+      "Capture du profil et des statistiques dans ARCHIVE 10K.",
+      "Top 3 des reels du mois : on en tourne une nouvelle version.",
+      "Le flop du mois : on comprend pourquoi, on ne le refait pas.",
+      "Relevé des abonnés ici.",
+      "Avec Hugo : on reste dans la phase ou on passe la porte."
+    ]
+  },
+  "plan": {
+    "audit": {
+      "titre": "Où tu en es (audit du 12 novembre)",
+      "points": [
+        {
+          "fort": "Tes reels sont déjà vus",
+          "texte": "142 600 vues sur 36 reels, environ 4 fois ton nombre d'abonnés à chaque fois."
+        },
+        {
+          "fort": "Le problème, c'est la conversion",
+          "texte": "rien ne donne envie de s'abonner (pas de série, pas de question, légendes « #barber #haircut #page »)."
+        },
+        {
+          "fort": "Ton or est caché",
+          "texte": "la SIG, la NBA et l'équipe de France U22 sont dans tes stories à la une, pas dans ta bio ni tes reels."
+        },
+        {
+          "fort": "La régularité",
+          "texte": "7 semaines de pause au printemps, et plus rien depuis le 6 septembre 2026."
+        },
+        {
+          "fort": "Ce qui marche le mieux",
+          "texte": "la collab avec le salon (22 300 vues), les sportifs (EDF U22 : 12 800 vues), les reels qui racontent quelque chose."
+        }
+      ]
+    },
+    "positionnement": {
+      "fort": "Le barbier des pros, ouvert à tous.",
+      "texte": "Accessible et fort caractère : tu coupes les joueurs de la SIG, et tu coupes le gars du quartier avec le même niveau. Ta signature reste la tienne : la magie 🪄.",
+      "nomProfil": "Victor · Barbier Strasbourg",
+      "bio": "💈 Barbier des joueurs pros (SIG)… et des tiens 🪄\n📍 The Barbers, Illkirch · Strasbourg\n🎬 Je documente ma route vers 10K\n📲 RDV ↓",
+      "noteBio": "à valider : la NBA si tu veux l'ajouter",
+      "noteLien": "Garde le lien Planity direct : c'est un vrai point fort, beaucoup de barbiers n'en ont pas."
+    },
+    "aLaUne": [
+      { "titre": "Mon Histoire", "contenu": "Qui tu es, pourquoi barbier, le Défi 10K" },
+      { "titre": "Les Pros", "contenu": "Fusion de SIG 25/26, SIG 26/27, NBA et U22" },
+      { "titre": "Mes Coupes", "contenu": "Fusion de Burst Fade, Dégradé, Taper et 🪄" },
+      { "titre": "Le Salon", "contenu": "The Barbers, tarifs, comment réserver, avis clients" },
+      { "titre": "Ma Vie", "contenu": "Le Victor hors du salon" }
+    ],
+    "mix": [
+      { "but": "Fidéliser", "part": 40, "exemples": "Transfos, conseils, gestes techniques" },
+      {
+        "but": "Interaction",
+        "part": 25,
+        "exemples": "Note sur 10, choisis 1-2-3, vous auriez fait quoi"
+      },
+      {
+        "but": "Émotion",
+        "part": 20,
+        "exemples": "Défi 10K, histoires de clients, avant le match"
+      },
+      { "but": "Vendre", "part": 10, "exemples": "Créneaux le 20 et le 5, collabs" },
+      { "but": "Récompenser", "part": 5, "exemples": "La coupe offerte du mois" }
+    ],
+    "semaineType": {
+      "titre": "La semaine type (phase 1)",
+      "jours": [
+        { "jour": "Lundi", "publier": null, "salon": "Repos, relever les abonnés" },
+        {
+          "jour": "Mardi",
+          "publier": "Reel Transfo",
+          "reelPrincipal": true,
+          "salon": "Kit 4 plans"
+        },
+        { "jour": "Mercredi", "publier": "Réel d'essai (dès la sem. 2)", "salon": "Kit 4 plans" },
+        {
+          "jour": "Jeudi",
+          "publier": "Reel Interaction ou Émotion",
+          "reelPrincipal": true,
+          "salon": "Kit 4 plans, séquence MEP"
+        },
+        { "jour": "Vendredi", "publier": null, "salon": "Kit 4 plans, facecam 30 s" },
+        {
+          "jour": "Samedi",
+          "publier": "Reel du samedi",
+          "reelPrincipal": true,
+          "salon": "Kit 4 plans"
+        },
+        { "jour": "Dimanche", "publier": null, "salon": "1 h de montage avec Claude" }
+      ],
+      "note": "Temps total : environ 3 h par semaine. Créneaux à tester : 12h-13h et 18h30-20h."
+    },
+    "mep": {
+      "intro": "Le reel attire, la story remplit l'agenda. 3 stories par jour minimum : ta vie, le salon, un conseil. Le jeudi, une séquence MEP :",
+      "etapes": [
+        {
+          "fort": "Montrer",
+          "texte": "« Aujourd'hui je vous parle de ma formule dégradé + barbe », photo du résultat."
+        },
+        {
+          "fort": "Expliquer",
+          "texte": "ce qu'il y a dedans, la durée, le prix, comment ça se passe."
+        },
+        {
+          "fort": "Proposer",
+          "texte": "sondage « Tu veux un créneau cette semaine ? ». Chaque oui reçoit le lien en message."
+        }
+      ]
+    },
+    "filRouge": {
+      "intro": "À 10K, ta meilleure vidéo sera « il y a 9 mois j'avais 645 abonnés ». Elle se prépare maintenant : tout va dans l'album ARCHIVE 10K.",
+      "points": [
+        "Le Jour Zéro, à filmer cette semaine.",
+        "Une capture du profil le 1er de chaque mois.",
+        "Tes premières fois et tes ratés (le bêtisier des 10K).",
+        "Ton setup qui évolue, le salon vide puis plein.",
+        "Un vocal à toi-même sur tes doutes, une fois par mois."
+      ]
+    }
+  },
+  "idees": {
+    "introEssais": "Les réels d'essai partent d'abord chez des gens qui ne te suivent pas. Méthode : même coupe, vraie variante (autre hook, autre ordre des plans). Au bout de 72 h, un essai gagne s'il fait 2 fois ta médiane récente (environ 6 900 vues) : tu le partages à tous et son hook devient un modèle."
+  },
+  "montage": {
+    "intro": "Tu déposes tes rushes sur ton ordinateur, tu colles un prompt prêt à copier dans Claude Code, et tu récupères un reel vertical sous-titré, prêt à poster. Toi, tu gardes le dernier mot : l'accroche et le rythme se valident à l'œil.",
+    "installation": {
+      "etapes": [
+        "Installe l'appli Claude sur ton ordinateur et connecte-toi à ton compte.",
+        "Crée un dossier nommé Montage Viktus sur ton ordinateur.",
+        "Ouvre l'onglet Code de l'appli Claude et choisis ce dossier.",
+        "Colle le message d'installation ci-dessous. Claude prépare le dossier et retient ton style pour tous les montages.",
+        "Dans l'appareil photo de l'iPhone, filme en 1080p à 30 i/s : fichiers légers, transfert rapide."
+      ],
+      "message": "Prépare ce dossier pour monter mes reels.\n1. Crée deux sous-dossiers : rushes et exports.\n2. Vérifie que ffmpeg est installé sur cet ordinateur. S'il ne l'est pas, installe-le.\n3. Crée un fichier CLAUDE.md qui contient exactement les instructions ci-dessous.\nDis-moi quand tout est prêt."
+    },
+    "kit": {
+      "plans": [
+        { "fort": "L'avant", "texte": "face et profil, 3 s, le client regarde l'objectif." },
+        {
+          "fort": "Le process",
+          "texte": "tondeuse ou rasoir en très gros plan, 15 s, son brut."
+        },
+        { "fort": "Le reveal", "texte": "360° sur la chaise ou face au miroir, 5 s." },
+        { "fort": "La réaction", "texte": "le client qui se découvre, 5 s." }
+      ],
+      "accord": "Toujours l'accord du client avant de filmer, par écrit (un message suffit). Pour un joueur pro, vérifie aussi avec le club."
+    },
+    "dimanche": {
+      "etapes": [
+        "Envoie les clips d'une coupe de ton iPhone vers le dossier rushes (AirDrop sur Mac, câble ou iCloud sur PC).",
+        "Ouvre le dossier Montage Viktus dans Claude Code, nouvelle conversation, et colle le bon prompt ci-dessous.",
+        "Claude dépose la vidéo dans le dossier exports. Demande les retouches en une phrase : « hook plus gros », « coupe le plan 3 à 2 s ».",
+        "Renvoie la vidéo sur ton téléphone et regarde-la, son coupé puis son activé.",
+        "Quand elle te plaît, écris « validé » : Claude range les rushes utilisés et tu passes à la coupe suivante.",
+        "Programme-la dans Instagram, ajoute la musique tendance depuis Instagram et géolocalise The Barbers."
+      ]
+    },
+    "checklist": [
+      "Le hook se lit dès la première image.",
+      "Aucun filigrane d'une autre appli.",
+      "Rien d'important caché par l'interface d'Instagram.",
+      "« Strasbourg » dans la légende, géolocalisation, 3 à 5 hashtags.",
+      "Une question ou un appel à réserver à la fin."
+    ]
+  }
+}

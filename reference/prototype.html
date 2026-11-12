@@ -1,0 +1,781 @@
+<title>Viktus 10K</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@500;600&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout : appli mobile d'abord. Une colonne de 620 px max, en-tête collant, barre d'onglets fixe en bas.
+   Signature visuelle : la barre "fondu" (dégradé de barbier) qui sert de jauge partout. */
+:root{
+  --bg:#131217; --surface:#1c1a22; --surface-2:#26232e; --line:#363241;
+  --fg:#f4f2f7; --muted:#a6a2b3; --accent:#ff4f8b; --accent-ink:#1b0a12;
+  --good:#4fd18b; --warn:#f2b84b; --bad:#ff6b6b;
+  --tab-bg:rgba(19,18,23,.92);
+  --f-display:"Anton","Impact","Arial Narrow",sans-serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --r:14px;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f6f4f8; --surface:#ffffff; --surface-2:#eeebf2; --line:#dbd6e2;
+    --fg:#17151c; --muted:#5f5b6b; --accent:#d3226a; --accent-ink:#ffffff;
+    --good:#1c9a58; --warn:#a96d12; --bad:#cf3f3f; --tab-bg:rgba(246,244,248,.94);
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f6f4f8; --surface:#ffffff; --surface-2:#eeebf2; --line:#dbd6e2;
+  --fg:#17151c; --muted:#5f5b6b; --accent:#d3226a; --accent-ink:#ffffff;
+  --good:#1c9a58; --warn:#a96d12; --bad:#cf3f3f; --tab-bg:rgba(246,244,248,.94);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 calc(92px + env(safe-area-inset-bottom,0px));-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--accent)}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:620px;margin:0 auto}
+.wrap.wide{max-width:980px}
+h1,h2,h3{text-wrap:balance;margin:0}
+.display{font-family:var(--f-display);font-weight:400;letter-spacing:.01em;text-transform:uppercase;line-height:1}
+.mono{font-family:var(--f-mono)}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.num{font-variant-numeric:tabular-nums}
+
+/* En-tête */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);padding-block:14px 12px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand b{font-family:var(--f-display);font-weight:400;font-size:26px;letter-spacing:.02em;white-space:nowrap}
+.brand b span{color:var(--accent)}
+.brand small{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:var(--surface);
+  border-radius:999px;padding:9px 14px;font-weight:700;font-size:13.5px;cursor:pointer;min-height:40px}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.ghost{background:transparent}
+.btn.small{min-height:32px;padding:6px 11px;font-size:12.5px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* Vues */
+main{padding-block:18px 8px;display:flex;flex-direction:column;gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.card > h2{font-size:17px;font-weight:800;margin-bottom:10px}
+.section-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:4px}
+.section-title h2{font-family:var(--f-display);font-weight:400;font-size:24px;text-transform:uppercase;letter-spacing:.02em}
+.stack{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:420px){.grid3{gap:8px}.stat{padding:10px 11px}.stat .v{font-size:26px}}
+p{margin:0}
+ul.clean{list-style:none;margin:0;padding:0}
+
+/* Le fondu : jauge en dégradé de barbier */
+.fade{position:relative;height:12px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.fade > i{position:absolute;inset:0 auto 0 0;border-radius:999px;
+  background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 12%,transparent),var(--accent));transition:width .4s ease}
+.fade.thin{height:8px}
+.legend-scale{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;color:var(--muted);margin-top:6px}
+
+/* Bandeau du jour */
+.hero{display:flex;flex-direction:column;gap:12px}
+.hero .big{font-family:var(--f-display);font-size:44px;line-height:.95;text-transform:uppercase}
+.hero .big em{font-style:normal;color:var(--accent)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;
+  font-size:12px;font-weight:700;background:var(--surface);white-space:nowrap}
+.chip.acc{border-color:color-mix(in srgb,var(--accent) 55%,var(--line));color:var(--accent)}
+.chip.good{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line))}
+.chip.warn{color:var(--warn);border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
+.chip.bad{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.chip-btn{cursor:pointer;background:transparent}
+.chip-btn[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+
+.coach{border-left:3px solid var(--accent);padding:12px 14px;background:var(--surface);border-radius:0 var(--r) var(--r) 0}
+.coach .eyebrow{color:var(--accent)}
+.coach p{margin-top:4px;white-space:pre-wrap}
+
+/* Tâches */
+.task{display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--line)}
+.task:first-child{border-top:0}
+.task input{appearance:none;-webkit-appearance:none;width:28px;height:28px;border-radius:9px;border:2px solid var(--line);
+  background:var(--bg);display:grid;place-content:center;cursor:pointer;margin:0}
+.task input::after{content:"";width:12px;height:7px;border-left:3px solid var(--accent-ink);border-bottom:3px solid var(--accent-ink);
+  transform:rotate(-45deg) translate(1px,-1px);opacity:0}
+.task input:checked{background:var(--accent);border-color:var(--accent)}
+.task input:checked::after{opacity:1}
+.task label{cursor:pointer;font-weight:700;display:block}
+.task.done label{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.task .hint{font-size:13px;color:var(--muted);margin-top:3px}
+.task .tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;margin-right:6px;color:var(--accent)}
+.task .links{margin-top:6px;display:flex;gap:12px;flex-wrap:wrap;font-size:13px;font-weight:700}
+
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-width:0}
+.stat .v{font-family:var(--f-display);font-size:32px;line-height:1.05}
+.stat .l{font-size:12.5px;color:var(--muted);font-weight:600}
+.stat .s{font-size:12px;margin-top:2px}
+
+/* Phases */
+.phase{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;padding:14px;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.phase.now{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.phase .n{font-family:var(--f-display);font-size:34px;line-height:1;color:var(--muted)}
+.phase.now .n{color:var(--accent)}
+.phase h3{font-size:16px;font-weight:800}
+.phase dl{margin:8px 0 0;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 12px;font-size:13.5px}
+.phase dt{color:var(--muted);font-weight:600}
+.phase dd{margin:0}
+.gate{display:flex;gap:10px;align-items:center;padding:6px 0 6px 18px;font-size:13px;color:var(--muted)}
+.gate svg{flex:none}
+
+/* Tableaux */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+
+/* Concepts */
+.concept{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:8px}
+.concept h3{font-size:16px;font-weight:800}
+.concept .hook{font-family:var(--f-display);font-size:21px;line-height:1.1;text-transform:uppercase}
+.concept .meta{display:flex;gap:6px;flex-wrap:wrap}
+.concept dl{margin:0;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 10px;font-size:13.5px}
+.concept dt{color:var(--muted);font-weight:600}
+.concept dd{margin:0}
+.copybox{position:relative;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:12px 12px 12px;
+  font-family:var(--f-mono);font-size:12.5px;line-height:1.55;white-space:pre-wrap;word-break:break-word;max-height:300px;overflow:auto}
+.copyrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.copyrow > .mono{white-space:nowrap}
+
+/* Formulaires */
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label{font-size:12.5px;font-weight:700;color:var(--muted)}
+input[type=text],input[type=number],input[type=date],textarea,select{width:100%;background:var(--bg);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;min-height:42px}
+textarea{min-height:90px;resize:vertical}
+
+/* Barre d'onglets */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--tab-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);padding:6px max(10px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(10px,env(safe-area-inset-left,0px))}
+.tabs .in{max-width:620px;margin:0 auto;display:flex;justify-content:space-between;gap:2px}
+.tabs a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;border-radius:10px;
+  color:var(--muted);text-decoration:none;font-size:11px;font-weight:700;min-width:0}
+.tabs a svg{width:22px;height:22px;flex:none}
+.tabs a span{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:10.5px}
+.tabs a[aria-current="page"]{color:var(--fg)}
+.tabs a[aria-current="page"] svg{color:var(--accent)}
+
+/* Feuille d'installation, toast */
+.sheet{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.55);display:flex;align-items:flex-end;justify-content:center;
+  padding:0 max(10px,env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) max(10px,env(safe-area-inset-left,0px))}
+.sheet .panel{background:var(--surface);border:1px solid var(--line);border-radius:18px 18px 0 0;max-width:620px;width:100%;
+  padding:20px 18px 24px;max-height:85vh;overflow:auto}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:40;
+  background:var(--fg);color:var(--bg);border-radius:999px;padding:10px 16px;font-weight:700;font-size:13.5px;max-width:calc(100% - 32px)}
+.banner{border:1px dashed var(--line);border-radius:12px;padding:10px 12px;font-size:13px;color:var(--muted)}
+ol.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px}
+ol.steps li::marker{font-family:var(--f-mono);color:var(--accent);font-weight:600}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+@media (max-width:560px){.split{grid-template-columns:minmax(0,1fr)}}
+.heat{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.heat div{aspect-ratio:1;border-radius:6px;border:1px solid var(--line);max-width:100%;display:grid;place-items:center;font-family:var(--f-mono);font-size:10.5px;color:var(--muted)}
+.chartbox{overflow-x:auto}
+.chartbox svg{display:block;width:100%;max-width:620px;height:auto;min-width:300px}
+.mix{display:grid;grid-template-columns:max-content minmax(0,1fr) 40px;gap:8px 12px;align-items:center;font-size:13.5px}
+.empty{padding:18px;border:1px dashed var(--line);border-radius:var(--r);color:var(--muted);font-size:13.5px;text-align:center}
+details summary{cursor:pointer;font-weight:800}
+details[open] summary{margin-bottom:10px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap" id="shell">
+  <header class="top">
+    <div class="brand"><b>VIKTUS <span>10K</span></b><small id="hdr-sub">645 → 10 000 abonnés</small></div>
+    <button class="btn small ghost" id="btn-install" type="button">Installer</button>
+  </header>
+  <main id="view" aria-live="polite"></main>
+</div>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="in" id="tabs"></div>
+</nav>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="copyrow"><h2 id="sheet-title" class="display" style="font-size:26px">Mettre l'appli sur ton écran</h2>
+      <button class="btn small" type="button" data-action="close-sheet">Fermer</button></div>
+    <div class="stack">
+      <p class="muted">Tu l'ouvres en un geste, comme une vraie appli. Reste connecté à ton compte Claude dans le navigateur, sinon tes cases cochées ne seront pas enregistrées.</p>
+      <div class="card"><h2>iPhone (Safari)</h2>
+        <ol class="steps"><li>Ouvre le lien de l'appli dans Safari et connecte-toi à Claude.</li><li>Touche le bouton Partager (le carré avec la flèche).</li><li>Choisis « Sur l'écran d'accueil », renomme en <b>Viktus 10K</b>, puis Ajouter.</li></ol></div>
+      <div class="card"><h2>Android (Chrome)</h2>
+        <ol class="steps"><li>Ouvre le lien dans Chrome et connecte-toi à Claude.</li><li>Touche le menu ⋮ en haut à droite.</li><li>Choisis « Ajouter à l'écran d'accueil ».</li></ol></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ============ CONTENU DU PLAN ============ */
+const START = "2026-11-16";
+const AUDIT = { followers:645, following:262, posts:87, reels:36, totalViews:142600, median:2530, median12:3450, likeRate:"2,3 %", perFollower:220, lastReel:"6 septembre 2026", salonFollowers:7274 };
+const PHASES = [
+  {n:1,name:"Le redémarrage",from:"2026-11-16",to:"2026-12-20",goal:[645,1000],
+   focus:"Reprendre le rythme et poser les bases : profil refait, setup au fauteuil, premières fois.",
+   cadence:"3 reels par semaine (mar, jeu, sam) + 1 réel d'essai le mercredi dès la semaine 2, 3 stories par jour",
+   gate:"12 reels publiés, 28 jours de stories d'affilée, bio et à la une refaites"},
+  {n:2,name:"Le rythme",from:"2026-12-21",to:"2027-02-28",goal:[1000,2500],
+   focus:"Installer les séries (Défi 10K, Les Pros) et trouver les hooks qui marchent grâce aux réels d'essai.",
+   cadence:"3 reels + 2 réels d'essai par semaine, 1 carrousel toutes les 2 semaines, 3 à 5 stories par jour",
+   gate:"1 reel au-dessus de 10 000 vues hors collab et 15 hooks testés dans le carnet"},
+  {n:3,name:"L'accélération",from:"2027-03-01",to:"2027-05-31",goal:[2500,5000],
+   focus:"Les collabs : le salon, les joueurs (avec leur accord), les commerces de Strasbourg. Micro-trottoirs.",
+   cadence:"4 reels + 2 réels d'essai par semaine, 1 carrousel, 1 post collaboratif par mois",
+   gate:"5 000 abonnés et des clients qui viennent d'Instagram chaque semaine"},
+  {n:4,name:"La marque",from:"2027-06-01",to:"2027-08-31",goal:[5000,10000],
+   focus:"Les séries signature et le reel « il y a 9 mois j'avais 645 abonnés ».",
+   cadence:"4 à 5 reels + 3 réels d'essai par semaine, 1 live par mois",
+   gate:"10 000 abonnés"}
+];
+const TARGETS = [["2026-11-12",645],["2026-12-31",1000],["2027-01-31",1700],["2027-02-28",2500],["2027-03-31",3300],["2027-04-30",4100],["2027-05-31",5000],["2027-06-30",6500],["2027-07-31",8200],["2027-08-31",10000]];
+
+const FIRSTS = [
+  ["f_bio","Refaire le nom de profil et la bio","Nom : Victor · Barbier Strasbourg. Bio dans l'onglet Plan, prête à copier."],
+  ["f_highlights","Ranger les stories à la une en 5","Mon Histoire, Les Pros, Mes Coupes, Le Salon, Ma Vie. Mêmes couvertures avec ton logo VB."],
+  ["f_album","Créer l'album ARCHIVE 10K sur ton téléphone","Tout ce qui servira à raconter l'avant/après va dedans."],
+  ["f_dayzero","Filmer le Jour Zéro","30 s face caméra au salon vide : « J'ai 645 abonnés. Je me lance. Rendez-vous à 10 000. » Garde-le, même raté."],
+  ["f_setup","Installer le support et la lumière près du fauteuil","Toujours le même angle, mains libres."],
+  ["f_claude","Créer ton compte Claude et le projet Montage Viktus","Onglet Montage, étape 1."],
+  ["f_firstclaude","Premier reel monté avec Claude",""],
+  ["f_facecam","Première story face caméra","Juste toi qui parles 15 secondes. Personne ne juge, c'est un entraînement."],
+  ["f_trial","Premier réel d'essai",""],
+  ["f_note10","Premier « Note sur 10 » et une réponse à chaque commentaire",""],
+  ["f_mep","Première séquence MEP en stories avec sondage",""],
+  ["f_series","Premier épisode de la série Défi 10K",""],
+  ["f_collab","Premier post collaboratif avec @thebarbers.pro","Le salon a 7 274 abonnés. Ta collab de septembre a fait 22 300 vues."],
+  ["f_pro","Premier contenu avec un joueur pro, avec son accord","Demande toujours avant de filmer, et vérifie avec le club."],
+  ["f_sunday","Premier dimanche de montage tenu en 1 heure",""],
+  ["f_28","28 jours de stories d'affilée",""]
+];
+
+const GOALS = {fid:"Fidéliser",int:"Interaction",emo:"Émotion",rec:"Récompenser",ven:"Vendre",ess:"Réel d'essai"};
+const CONCEPTS = [
+  {g:"fid",p:1,t:"La Transfo",hook:"Il est rentré comme ça...",shots:"Avant 1 s, tondeuse en gros plan, reveal 360° sur le temps fort, réaction",cap:"Burst fade + contour, The Barbers Illkirch. Note sur 10 ? RDV en bio.",note:"Ton format signature. Une par semaine minimum."},
+  {g:"fid",p:1,t:"30 minutes en 30 secondes",hook:"Un dégradé du début à la fin",shots:"Coupe complète en accéléré, vrai son de tondeuse, reveal ralenti",cap:"Taper fade de A à Z à Strasbourg. Envoie-le à celui qui doit passer chez le barbier.",note:"Format qui se partage : parfait pour toucher des non-abonnés."},
+  {g:"fid",p:1,t:"Burst, taper ou dégradé ?",hook:"3 coupes que tout le monde confond",shots:"3 résultats côte à côte, une phrase par coupe",cap:"Burst fade, taper ou dégradé classique : tu prends laquelle ? Réponds 1, 2 ou 3.",note:"Reprend tes stories à la une Burst Fade, Dégradé, Taper."},
+  {g:"fid",p:2,t:"Le rattrapage",hook:"Il sortait d'un autre barbier...",shots:"Zoom sur le défaut, réparation en accéléré, résultat",cap:"Mission rattrapage à Strasbourg. Tag le pote qui se fait rater à chaque fois.",note:"Jamais le nom de l'autre salon."},
+  {g:"fid",p:2,t:"Le vestiaire",hook:"Je coupe dans le vestiaire des pros",shots:"Arrivée avec la mallette, installation, coupe, joueur prêt",cap:"Quand l'équipe veut être fraîche avant le match. Barbier à domicile pour les clubs de Strasbourg.",note:"Uniquement avec l'accord du joueur et du club."},
+  {g:"fid",p:2,t:"3 erreurs qui ruinent ton dégradé",hook:"Arrête de faire ça chez toi",shots:"Facecam au salon, 3 gestes montrés sur un client",cap:"Les 3 erreurs que je vois tous les jours. Laquelle tu fais ?",note:"Premier vrai contenu face caméra."},
+  {g:"fid",p:2,t:"Quelle coupe pour ta forme de visage",hook:"Rond, carré ou ovale ?",shots:"Carrousel : une forme, une coupe, une photo",cap:"Enregistre-le pour ta prochaine coupe. Barbier à Strasbourg.",note:"Carrousel : beaucoup d'enregistrements."},
+  {g:"int",p:1,t:"Note la coupe sur 10",hook:"Sois honnête : sur 10 ?",shots:"Reveal seul, 5 à 7 s",cap:"Note sur 10, je réponds à tout le monde.",note:"Réponds à chaque commentaire dans l'heure."},
+  {g:"int",p:1,t:"Vous auriez fait quoi ?",hook:"Il m'a laissé carte blanche",shots:"Avant 2 s, 3 options écrites à l'écran, résultat",cap:"Option 1, 2 ou 3 ? Je te dis en commentaire ce que j'ai choisi.",note:"Ton reel du 20 août avec cette question a fait 3 431 vues et 8 commentaires."},
+  {g:"int",p:2,t:"Ma première coupe vs aujourd'hui",hook:"Ma toute première coupe vs maintenant",shots:"Vieille photo, coupe du jour, question finale",cap:"Et toi, t'as commencé quoi cette année ?",note:"Le parallélisme de la formation SPARTA."},
+  {g:"int",p:3,t:"Micro-trottoir Strasbourg",hook:"C'est qui le meilleur barbier de Strasbourg ?",shots:"Passants place Kléber, coupe offerte au gagnant",cap:"On a demandé dans la rue. La réponse en fin de vidéo.",note:"Demande l'accord des personnes filmées."},
+  {g:"emo",p:1,t:"Défi 10K, Jour X",hook:"Jour 1 : 645 abonnés",shots:"Facecam 8 s, puis la transfo du jour, compteur à l'écran",cap:"Je documente ma route de 645 à 10 000. Abonne-toi pour voir si j'y arrive.",note:"La série qui transforme les vues en abonnés."},
+  {g:"emo",p:1,t:"Entretien demain 9h",hook:"Il a un entretien d'embauche demain",shots:"Sans facecam, l'histoire en texte, musique douce, reveal",cap:"Un entretien cette semaine ? Je te garde un créneau.",note:"Raconte l'histoire du client, avec son accord."},
+  {g:"emo",p:1,t:"Ça faisait 2 ans",hook:"2 ans sans passer chez le barbier",shots:"Avant longue durée, process, reveal",cap:"2 ans d'attente pour ça. Ça valait le coup ?",note:"Ton reel du 28 mai sur ce thème a fait 3 451 vues."},
+  {g:"emo",p:2,t:"Le joueur avant le match",hook:"Il joue ce soir au Rhénus",shots:"Coupe calme, regard concentré, sortie du salon",cap:"Frais avant le match. Allez la SIG.",note:"Ta coupe de l'équipe de France U22 a fait 12 800 vues. Accord du joueur obligatoire."},
+  {g:"emo",p:2,t:"Le temps passe, le niveau aussi",hook:"Mes coupes il y a 1 an vs aujourd'hui",shots:"Montage des anciennes coupes puis des récentes",cap:"Et j'ai pas fini.",note:"Ton reel du 8 août sur ce thème a fait 6 144 vues."},
+  {g:"rec",p:2,t:"La coupe offerte du mois",hook:"Je t'offre ta prochaine coupe",shots:"Toi face caméra, règles à l'écran",cap:"Pour participer : like, partage en story, tag 2 potes. Tirage le 1er.",note:"Donne pour mieux recevoir."},
+  {g:"rec",p:3,t:"Vous l'avez nominé",hook:"Vous l'avez nominé, je l'ai coupé",shots:"Histoire de l'abonné, transfo, réaction",cap:"Nomine quelqu'un qui mérite une coupe offerte en commentaire.",note:"Émotion + interaction en un seul reel."},
+  {g:"ven",p:1,t:"Il reste X créneaux",hook:"Plus que 4 places cette semaine",shots:"Best-of de la semaine + lien",cap:"Réserve sur Planity, lien en bio. The Barbers, Illkirch.",note:"À poster le 20 et le 5 du mois."},
+  {g:"ven",p:1,t:"Collab avec le salon",hook:"Le nouveau du salon",shots:"Coupe filmée par le salon, publié en collaboration",cap:"Victor à The Barbers Illkirch. RDV en bio.",note:"Ta collab de septembre : 22 300 vues, ton record."},
+  {g:"ven",p:3,t:"Je coupe une figure de Strasbourg",hook:"J'ai coupé [nom] avant son match",shots:"Post collaboratif publié sur les deux comptes",cap:"Merci pour la confiance. RDV en bio.",note:"Un par mois en phase 3."}
+];
+const TRIALS = [
+  ["Carte blanche","« Il m'a dit : fais ce que tu veux »","Avant, tondeuse, reveal 360° sur le drop","Note sur 10, je réponds à tout le monde"],
+  ["Le rattrapage","« Il sortait de chez un autre barbier... »","Zoom sur le défaut, réparation accélérée, reveal","Envoie ça au pote qui se fait rater"],
+  ["0 ou 0,5","« Dégradé à 0 ou à 0,5 : regarde »","Écran partagé, un côté de chaque","Team 0 ou team 0,5 ?"],
+  ["Avant le match","« Il joue ce soir au Rhénus »","Coupe calme, concentration, sortie","Allez la SIG"],
+  ["Mets le son","« Mets le son. »","15 s de tondeuse et rasoir en très gros plan","Le son le plus satisfaisant de Strasbourg ?"],
+  ["La phrase interdite","« La phrase que tous les barbiers détestent »","Client : juste un petit peu sur les côtés, regard caméra","Tag celui qui dit toujours ça"],
+  ["Jour 1 du défi","« J'ai 645 abonnés. Objectif : 10 000. »","Facecam 8 s puis la transfo du jour","Abonne-toi pour voir si j'y arrive"],
+  ["Le meilleur de Strasbourg","« C'est qui le meilleur barbier de Strasbourg ? »","Transfo rapide, question qui reste à l'écran","Cite ton barbier, je réponds à tous"]
+];
+
+const PROJECT_INSTRUCTIONS = `Tu es le monteur de Victor (Viktus Blendz), barbier à The Barbers Illkirch, près de Strasbourg. Compte Instagram : @viktusblendz.
+
+FORMAT
+- Vertical 1080 x 1920, 30 images/s, MP4 (H.264).
+- Durée : 7 à 20 secondes sauf si je demande autre chose.
+- Aucune musique dans le fichier : je l'ajoute dans Instagram.
+- Aucun filigrane, aucun logo d'application.
+
+STRUCTURE D'UNE TRANSFO
+- 0 à 1 s : l'avant, le client de face. Le hook est lisible dès la première image.
+- Process : plans courts de 0,5 à 1,5 s, je garde le vrai son de la tondeuse.
+- Reveal sur un temps fort (360° sur la chaise ou face au miroir).
+- Fin : la réaction du client.
+
+TEXTE À L'ÉCRAN
+- Hook en haut, dans le tiers supérieur : police grasse sans serif, blanc avec contour noir, 2 lignes maximum.
+- Rien d'important dans les 14 % du haut ni dans les 35 % du bas (interface d'Instagram).
+
+SOUS-TITRES
+- Si quelqu'un parle : sous-titres mot à mot, gros, centrés, au-dessus de la zone du bas.
+
+COULEUR
+- Naturelle, contraste léger, peau jamais jaune ni orange.
+
+AVANT DE ME LIVRER
+- Vérifie toi-même la première image, le reveal et la dernière image.
+- Donne-moi aussi : 3 hooks alternatifs, 1 légende qui contient « Strasbourg » et finit par une question, 3 à 5 hashtags dont #barbierstrasbourg.`;
+
+const PROMPTS = [
+  ["La Transfo","Voici les rushes d'une transfo, dans l'ordre : avant, process, reveal, réaction.\nCoupe : [type de coupe, ex : burst fade + contour]\nHook à l'écran : « [ton hook] »\nMonte un reel de 12 à 15 s en suivant les instructions du projet."],
+  ["Réel d'essai (variante)","Fais une vraie variante du reel précédent pour un réel d'essai : nouveau hook « [autre hook] », ordre des plans différent (commence par le geste le plus impressionnant), texte différent. Ce ne doit pas être le même fichier reposté."],
+  ["30 min en 30 s","Voici la coupe complète. Accélère-la pour tenir en 25 à 30 s, garde le vrai son, ralentis le reveal à la fin. Hook : « Un dégradé du début à la fin »."],
+  ["Facecam sous-titrée","Voici ma vidéo face caméra. Coupe les silences et les hésitations, garde un rythme rapide, ajoute des sous-titres mot à mot. Hook en haut : « [ton hook] »."],
+  ["Défi 10K, Jour X","Monte l'épisode du Défi 10K : ma facecam d'abord, puis la transfo du jour. Ajoute en haut un compteur fixe « JOUR [X] · [abonnés] ABONNÉS »."],
+  ["Légendes","Écris 3 légendes courtes pour ce reel : [décris la coupe et le client]. Chaque légende contient « Strasbourg », finit par une question ou un appel à réserver, et je veux 3 à 5 hashtags dont #barbierstrasbourg."]
+];
+
+const RULES_2026 = [
+  ["Fais un contenu qu'on envoie à un pote.","Les partages en message privé pèsent le plus pour toucher des gens qui ne te suivent pas. Le temps de visionnage et les likes comptent aussi.","https://www.zoomsphere.com/blog/instagram-algorithm-2026-what-actually-gets-reach"],
+  ["Les commentaires comptent moins qu'on croit.","Instagram l'a redit en octobre 2026 : ce qui compte surtout, c'est ce que les gens partagent. Réponds quand même à tout : Buffer mesure +21 % d'engagement quand le compte répond.","https://buffer.com/resources/instagram-algorithms/"],
+  ["Toujours du contenu original.","Jamais de filigrane d'une autre appli (CapCut, TikTok) et jamais reposter le contenu des autres : Instagram met en avant l'original.","https://www.zoomsphere.com/blog/instagram-algorithm-2026-what-actually-gets-reach"],
+  ["Les hashtags servent à la recherche, pas à la portée.","3 à 5 maximum, dont #barbierstrasbourg. Mets « Strasbourg » dans la légende et géolocalise chaque post.","https://www.zoomsphere.com/blog/instagram-algorithm-2026-what-actually-gets-reach"],
+  ["Programmer un reel ne fait pas baisser sa portée.","Tu peux tout monter le dimanche et tout programmer.","https://metricool.com/instagram-news/"],
+  ["La moitié des vidéos sont regardées sans le son.","Texte à l'écran dès la première image et sous-titres dès que tu parles.","https://buffer.com/resources/instagram-algorithms/"],
+  ["Réels d'essai : oui, mais jamais le même fichier.","Plusieurs essais par jour sont autorisés, mais reposter le même reel en essai est sanctionné, et Instagram plafonne le nombre d'essais par mois.","https://metricool.com/instagram-news/"],
+  ["La régularité paie.","Les comptes qui publient régulièrement font près de 5 fois plus d'engagement par post (étude Buffer, toutes plateformes).","https://buffer.com/resources/instagram-algorithms/"]
+];
+
+/* ============ OUTILS ============ */
+const $ = (s,el=document)=>el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => Number(n).toLocaleString("fr-FR");
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function parseISO(s){const [y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d)}
+function addDays(s,n){const d=parseISO(s);d.setDate(d.getDate()+n);return iso(d)}
+function diffDays(a,b){return Math.round((parseISO(b)-parseISO(a))/864e5)}
+const MONTHS=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+const DAYS=["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"];
+function nice(s){const d=parseISO(s);return DAYS[d.getDay()]+" "+d.getDate()+" "+MONTHS[d.getMonth()]}
+function short(s){const d=parseISO(s);return d.getDate()+" "+MONTHS[d.getMonth()]}
+
+/* ============ ÉTAT ============ */
+const S = {
+  today: iso(new Date()), view:"today", cfg:{coachMessage:"",phase:0}, days:{}, stats:{}, hooks:[], firsts:{},
+  db:null, user:null, isOwner:false, live:false, readOnly:false, ideaFilter:"all", loadingNote:""
+};
+
+function phaseByDate(date){ for(const p of PHASES){ if(date<=p.to) return p.n } return 4 }
+function currentPhase(){ return Number(S.cfg.phase)||phaseByDate(S.today<START?START:S.today) }
+function weekOf(date){ return date<START?0:Math.floor(diffDays(START,date)/7)+1 }
+function targetAt(date){
+  const t=TARGETS; if(date<=t[0][0]) return t[0][1];
+  for(let i=1;i<t.length;i++){ if(date<=t[i][0]){ const a=t[i-1],b=t[i]; const f=diffDays(a[0],date)/diffDays(a[0],b[0]); return Math.round(a[1]+(b[1]-a[1])*f) } }
+  return t[t.length-1][1];
+}
+function latestFollowers(){
+  const ks=Object.keys(S.stats).sort(); if(!ks.length) return {date:"2026-11-12",v:AUDIT.followers,seed:true};
+  const k=ks[ks.length-1]; return {date:k,v:Number(S.stats[k].followers)||0};
+}
+
+/* Tâches du jour selon la phase et le jour de la semaine */
+function tasksFor(date){
+  if(date<START) return [];
+  const ph=phaseByDate(date), wk=weekOf(date), wd=parseISO(date).getDay(), dom=parseISO(date).getDate();
+  const T=[];
+  const add=(id,label,hint,kind="routine",link)=>T.push({id,label,hint,kind,link});
+  const work = wd>=2 && wd<=6;
+  if(work){
+    add("kit","Filmer le kit 4 plans sur le client du jour","Avant 3 s, process 15 s, reveal 5 s, réaction 5 s. Demande d'abord l'accord du client.","routine","#montage");
+  }
+  if(wd===2) add("post_tue","Publier le reel Transfo","Entre 12h et 13h ou entre 18h30 et 20h. Géolocalise The Barbers Illkirch, « Strasbourg » dans la légende.","post","#idees");
+  if(wd===3){
+    if(ph>=3) add("post_wed","Publier un reel","Idéalement un concept Interaction ou une collab.","post","#idees");
+    if(wk>=2) add("trial_wed","Publier un réel d'essai","Une vraie variante avec un autre hook, jamais le même fichier.","trial","#idees");
+  }
+  if(wd===4){
+    add("post_thu","Publier le reel Interaction ou Émotion","Termine par une question. Réponds à chaque commentaire dans l'heure.","post","#idees");
+    add("mep","Séquence MEP en stories","Montrer, Expliquer, Proposer : finis par un sondage « Tu veux un créneau cette semaine ? ».","routine","#plan");
+  }
+  if(wd===5){
+    add("facecam","Filmer 30 s face caméra pour le Défi 10K","Où tu en es, ce que tu as appris cette semaine.","routine");
+    if(ph>=2) add("trial_fri","Publier un réel d'essai","Teste un hook du carnet que tu n'as pas encore essayé.","trial","#idees");
+  }
+  if(wd===6){
+    add("post_sat","Publier le reel du samedi","La meilleure coupe de la semaine, ou l'épisode du Défi 10K.","post","#idees");
+    if(ph>=3 || (ph===2 && wk%2===0)) add("carousel","Publier un carrousel avant/après","5 à 8 photos, la plus forte en premier.","carousel","#idees");
+  }
+  if(work){
+    add("stories","3 stories : ta vie, le salon, un conseil","Ne fake rien : la vraie journée.","routine","#plan");
+    add("reply","Répondre à tous les commentaires et messages","Dans l'heure qui suit une publication.","routine");
+    add("source","Demander aux nouveaux clients : « tu m'as trouvé comment ? »","Note les réponses Instagram dans Suivi le lundi.","routine");
+  }
+  if(wd===0){
+    add("edit","Session montage d'1 heure avec Claude","Monter les reels de la semaine et leurs variantes, puis tout programmer.","routine","#montage");
+    add("log","Noter les résultats des reels dans le carnet des hooks","Vues et partages à 72 h.","routine","#suivi");
+  }
+  if(wd===1){
+    add("followers","Relever ton nombre d'abonnés dans Suivi","1 minute, ça nourrit la courbe.","routine","#suivi");
+    add("story_mon","1 story de ta vie hors salon","Jour de repos, mais on reste présent.","routine");
+  }
+  if(dom===20||dom===5) add("sell","Jour de vente : « il reste X créneaux »","Reel ou stories avec le lien de réservation.","post","#idees");
+  if(dom===1) add("review","Revue du mois (20 min) et capture du profil","La capture va dans l'album ARCHIVE 10K.","routine","#suivi");
+  return T;
+}
+function dayPct(date){const t=tasksFor(date);if(!t.length) return null;const d=(S.days[date]&&S.days[date].done)||{};return t.filter(x=>d[x.id]).length/t.length}
+function streak(){
+  let n=0, d=S.today;
+  const p0=dayPct(d); if(p0===null||p0<0.6) d=addDays(d,-1);
+  while(d>=START){ const p=dayPct(d); if(p===null||p>=0.6){ if(p!==null) n++; d=addDays(d,-1) } else break; }
+  return n;
+}
+function weekRange(date){const wd=(parseISO(date).getDay()+6)%7;const mon=addDays(date,-wd);return [mon,addDays(mon,6)]}
+function postsInRange(a,b){let done=0,plan=0;for(let d=a;d<=b;d=addDays(d,1)){const t=tasksFor(d).filter(x=>x.kind==="post"||x.kind==="trial");plan+=t.length;const dn=(S.days[d]&&S.days[d].done)||{};done+=t.filter(x=>dn[x.id]).length}return {done,plan}}
+
+/* ============ ICÔNES ============ */
+const I = {
+  today:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>',
+  plan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5M4 19h16"/><path d="m7 15 4-4 3 3 5-6"/></svg>',
+  idees:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>',
+  montage:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.6 7.6 20 18M8.6 16.4 20 6"/></svg>',
+  suivi:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16"/><rect x="5" y="11" width="3" height="6"/><rect x="10.5" y="7" width="3" height="10"/><rect x="16" y="4" width="3" height="13"/></svg>',
+  coach:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.4 3.4 8.3 8 9 4.6-.7 8-4.6 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>'
+};
+const TABS=[["today","Aujourd'hui"],["plan","Plan"],["idees","Idées"],["montage","Montage"],["suivi","Suivi"]];
+
+/* ============ RENDU ============ */
+let pendingRender=false;
+function typing(){const a=document.activeElement;return a&&$("#view").contains(a)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.type!=="checkbox"}
+function render(force){
+  if(!force&&typing()){pendingRender=true;return}
+  pendingRender=false;
+  const tabs=[...TABS]; if(S.isOwner) tabs.push(["coach","Coach"]);
+  $("#tabs").innerHTML=tabs.map(([k,l])=>`<a href="#${k}" ${S.view===k?'aria-current="page"':""}>${I[k]}<span>${l}</span></a>`).join("");
+  const ph=PHASES[currentPhase()-1];
+  $("#hdr-sub").textContent=`Phase ${ph.n} · ${ph.name}`;
+  $("#shell").classList.toggle("wide",S.view==="coach");
+  const v=S.view;
+  const html = v==="plan"?viewPlan(): v==="idees"?viewIdees(): v==="montage"?viewMontage(): v==="suivi"?viewSuivi(): v==="coach"&&S.isOwner?viewCoach(): viewToday();
+  $("#view").innerHTML = statusBanner()+html;
+}
+document.addEventListener("focusout",()=>{if(pendingRender)setTimeout(()=>{if(!typing())render()},0)});
+
+function statusBanner(){
+  if(S.loadingNote) return `<p class="banner">${esc(S.loadingNote)}</p>`;
+  if(!S.live) return `<p class="banner">Aperçu : connecte-toi à ton compte Claude pour que tes cases cochées et tes chiffres soient enregistrés.</p>`;
+  if(S.readOnly) return `<p class="banner">Lecture seule : demande à Hugo de te donner l'accès « Éditeur » pour enregistrer ta progression.</p>`;
+  return "";
+}
+
+function fadeBar(pct,cls=""){const c=Math.max(0,Math.min(1,Number(pct)||0));return `<div class="fade ${cls}" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(c*100)}"><i style="width:${c*100}%"></i></div>`}
+
+function viewToday(){
+  const t=tasksFor(S.today), done=(S.days[S.today]&&S.days[S.today].done)||{};
+  const ph=PHASES[currentPhase()-1], lf=latestFollowers();
+  const nDone=t.filter(x=>done[x.id]).length;
+  const before=S.today<START;
+  const dayN=before?0:diffDays(START,S.today)+1;
+  const firstsDone=FIRSTS.filter(f=>S.firsts[f[0]]).length;
+  const goalPct=(lf.v-ph.goal[0])/(ph.goal[1]-ph.goal[0]);
+  const coach=S.cfg.coachMessage?`<div class="coach"><div class="eyebrow">Le mot du coach</div><p>${esc(S.cfg.coachMessage)}</p></div>`:"";
+  const head = before
+    ? `<div class="hero"><span class="eyebrow">${esc(nice(S.today))}</span><div class="big">Le plan démarre <em>lundi 16 nov.</em></div><p class="muted">D'ici là, attaque les premières fois ci-dessous : profil, setup, compte Claude, Jour Zéro.</p></div>`
+    : `<div class="hero"><span class="eyebrow">${esc(nice(S.today))} · semaine ${weekOf(S.today)}</span><div class="big">Jour <em>${dayN}</em></div>
+       <div class="chips"><span class="chip acc">Phase ${ph.n} · ${esc(ph.name)}</span><span class="chip">Série : ${streak()} jour${streak()>1?"s":""}</span></div></div>`;
+  const tasks = before ? "" : `<section class="card"><div class="copyrow"><h2 style="margin:0">Ta to-do du jour</h2><span class="mono num muted">${nDone}/${t.length}</span></div>
+     ${fadeBar(t.length?nDone/t.length:0)}
+     <ul class="clean" style="margin-top:8px">${t.length?t.map(x=>taskRow(x,done[x.id],"day")).join(""):`<li class="empty">Rien d'obligatoire aujourd'hui.</li>`}</ul>
+     ${t.length&&nDone===t.length?`<p class="chip good" style="margin-top:10px">Journée validée. Propre.</p>`:""}</section>`;
+  const firsts = firstsDone<FIRSTS.length ? `<section class="card"><div class="copyrow"><h2 style="margin:0">Les premières fois</h2><span class="mono num muted">${firstsDone}/${FIRSTS.length}</span></div>
+     <p class="muted" style="font-size:13.5px;margin-bottom:8px">Chacune se fête en story. Elles restent ici jusqu'à ce qu'elles soient toutes cochées.</p>
+     ${fadeBar(firstsDone/FIRSTS.length,"thin")}
+     <ul class="clean" style="margin-top:8px">${FIRSTS.filter(f=>!S.firsts[f[0]]).slice(0,5).map(f=>taskRow({id:f[0],label:f[1],hint:f[2]},false,"first")).join("")}</ul></section>` : "";
+  const goal = `<section class="card"><div class="copyrow"><h2 style="margin:0">Objectif de la phase</h2><span class="mono num">${fmt(lf.v)} / ${fmt(ph.goal[1])}</span></div>
+     ${fadeBar(goalPct)}<div class="legend-scale"><span>${fmt(ph.goal[0])}</span><span>${fmt(ph.goal[1])} abonnés</span></div>
+     <p class="muted" style="font-size:13.5px;margin-top:8px">${esc(ph.focus)}</p>
+     <p style="font-size:13.5px;margin-top:6px"><b>Porte de sortie :</b> ${esc(ph.gate)}.</p></section>`;
+  return head+coach+tasks+firsts+goal;
+}
+function taskRow(x,checked,scope){
+  const id=`${scope}-${x.id}`;
+  const tag = x.kind==="post"?"Publier":x.kind==="trial"?"Essai":x.kind==="carousel"?"Carrousel":"";
+  return `<li class="task ${checked?"done":""}"><input type="checkbox" id="${id}" data-scope="${scope}" data-id="${esc(x.id)}" ${checked?"checked":""} ${S.readOnly?"disabled":""}>
+   <div><label for="${id}">${tag?`<span class="tag">${tag}</span>`:""}${esc(x.label)}</label>${x.hint?`<div class="hint">${esc(x.hint)}</div>`:""}
+   ${x.link?`<div class="links"><a href="${x.link}">${x.link==="#montage"?"Comment monter":x.link==="#idees"?"Choisir un concept":x.link==="#suivi"?"Ouvrir Suivi":"Voir dans le plan"}</a></div>`:""}</div></li>`;
+}
+
+function viewPlan(){
+  const cp=currentPhase();
+  const phases=PHASES.map((p,i)=>`<div class="phase ${p.n===cp?"now":""}"><div class="n">${p.n}</div><div><h3>${esc(p.name)} ${p.n===cp?'<span class="chip acc" style="margin-left:6px">En cours</span>':""}</h3>
+    <dl><dt>Dates</dt><dd>${short(p.from)} au ${short(p.to)} ${p.to.slice(0,4)}</dd><dt>Objectif</dt><dd class="num">${fmt(p.goal[0])} → ${fmt(p.goal[1])} abonnés</dd><dt>Rythme</dt><dd>${esc(p.cadence)}</dd><dt>Focus</dt><dd>${esc(p.focus)}</dd></dl></div></div>
+    ${i<PHASES.length-1?`<div class="gate"><svg width="14" height="14" viewBox="0 0 14 14"><path d="M7 0 14 7 7 14 0 7z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg><span><b>Porte ${p.n} :</b> ${esc(p.gate)}</span></div>`:""}`).join("");
+  const bio=`💈 Barbier des joueurs pros (SIG)… et des tiens 🪄\n📍 The Barbers, Illkirch · Strasbourg\n🎬 Je documente ma route vers 10K\n📲 RDV ↓`;
+  const mix=[["Fidéliser",40,"Transfos, conseils, gestes techniques"],["Interaction",25,"Note sur 10, choisis 1-2-3, vous auriez fait quoi"],["Émotion",20,"Défi 10K, histoires de clients, avant le match"],["Vendre",10,"Créneaux le 20 et le 5, collabs"],["Récompenser",5,"La coupe offerte du mois"]];
+  return `<div class="section-title"><h2>Le game plan</h2><span class="eyebrow">645 → 10 000</span></div>
+  <section class="card"><h2>Où tu en es (audit du 12 novembre)</h2>
+    <div class="grid3"><div class="stat"><div class="v num">${fmt(AUDIT.followers)}</div><div class="l">abonnés</div></div>
+    <div class="stat"><div class="v num">${fmt(AUDIT.median)}</div><div class="l">vues médianes par reel</div></div>
+    <div class="stat"><div class="v num">1/${AUDIT.perFollower}</div><div class="l">abonné gagné par vue</div></div></div>
+    <ul style="margin:12px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14px">
+      <li><b>Tes reels sont déjà vus</b> : ${fmt(AUDIT.totalViews)} vues sur ${AUDIT.reels} reels, environ 4 fois ton nombre d'abonnés à chaque fois.</li>
+      <li><b>Le problème, c'est la conversion</b> : rien ne donne envie de s'abonner (pas de série, pas de question, légendes « #barber #haircut #page »).</li>
+      <li><b>Ton or est caché</b> : la SIG, la NBA et l'équipe de France U22 sont dans tes stories à la une, pas dans ta bio ni tes reels.</li>
+      <li><b>La régularité</b> : 7 semaines de pause au printemps, et plus rien depuis le ${AUDIT.lastReel}.</li>
+      <li><b>Ce qui marche le mieux</b> : la collab avec le salon (22 300 vues), les sportifs (EDF U22 : 12 800 vues), les reels qui racontent quelque chose.</li>
+    </ul></section>
+  <section class="stack"><div class="section-title"><h2 style="font-size:20px">Les 4 phases</h2></div>${phases}</section>
+  <section class="card"><h2>Ton positionnement</h2>
+    <p style="font-size:14px"><b>Le barbier des pros, ouvert à tous.</b> Accessible et fort caractère : tu coupes les joueurs de la SIG, et tu coupes le gars du quartier avec le même niveau. Ta signature reste la tienne : la magie 🪄.</p>
+    <div style="margin-top:12px" class="stack">
+      <div><div class="copyrow"><span class="eyebrow">Nom de profil (recherchable)</span><button class="btn small" data-copy="Victor · Barbier Strasbourg" type="button">Copier</button></div><div class="copybox">Victor · Barbier Strasbourg</div></div>
+      <div><div class="copyrow"><span class="eyebrow">Bio (à valider : la NBA si tu veux l'ajouter)</span><button class="btn small" data-copy="${esc(bio)}" type="button">Copier</button></div><div class="copybox">${esc(bio)}</div></div>
+      <p class="muted" style="font-size:13px">Garde le lien Planity direct : c'est un vrai point fort, beaucoup de barbiers n'en ont pas.</p>
+    </div></section>
+  <section class="card"><h2>Tes stories à la une : de 10 à 5</h2>
+    <div class="tablewrap"><table><thead><tr><th>À la une</th><th>Ce qu'on y met</th></tr></thead><tbody>
+      <tr><td><b>Mon Histoire</b></td><td>Qui tu es, pourquoi barbier, le Défi 10K</td></tr>
+      <tr><td><b>Les Pros</b></td><td>Fusion de SIG 25/26, SIG 26/27, NBA et U22</td></tr>
+      <tr><td><b>Mes Coupes</b></td><td>Fusion de Burst Fade, Dégradé, Taper et 🪄</td></tr>
+      <tr><td><b>Le Salon</b></td><td>The Barbers, tarifs, comment réserver, avis clients</td></tr>
+      <tr><td><b>Ma Vie</b></td><td>Le Victor hors du salon</td></tr></tbody></table></div></section>
+  <section class="card"><h2>Le mix des 5 buts SPARTA</h2>
+    <div class="mix">${mix.map(m=>`<b>${m[0]}</b>${fadeBar(m[1]/40,"thin")}<span class="mono num" style="text-align:right">${m[1]} %</span><span></span><span class="muted" style="font-size:12.5px;margin-top:-6px">${esc(m[2])}</span><span></span>`).join("")}</div></section>
+  <section class="card"><h2>La semaine type (phase 1)</h2>
+    <div class="tablewrap"><table><thead><tr><th>Jour</th><th>Publier</th><th>Au salon</th></tr></thead><tbody>
+      <tr><td>Lundi</td><td class="muted">Rien</td><td>Repos, relever les abonnés</td></tr>
+      <tr><td>Mardi</td><td><b>Reel Transfo</b></td><td>Kit 4 plans</td></tr>
+      <tr><td>Mercredi</td><td>Réel d'essai (dès la sem. 2)</td><td>Kit 4 plans</td></tr>
+      <tr><td>Jeudi</td><td><b>Reel Interaction ou Émotion</b></td><td>Kit 4 plans, séquence MEP</td></tr>
+      <tr><td>Vendredi</td><td class="muted">Rien</td><td>Kit 4 plans, facecam 30 s</td></tr>
+      <tr><td>Samedi</td><td><b>Reel du samedi</b></td><td>Kit 4 plans</td></tr>
+      <tr><td>Dimanche</td><td class="muted">Rien</td><td>1 h de montage avec Claude</td></tr></tbody></table></div>
+    <p class="muted" style="font-size:13px;margin-top:8px">Temps total : environ 3 h par semaine. Créneaux à tester : 12h-13h et 18h30-20h.</p></section>
+  <section class="card"><h2>Stories et méthode MEP</h2>
+    <p style="font-size:14px">Le reel attire, la story remplit l'agenda. 3 stories par jour minimum : ta vie, le salon, un conseil. Le jeudi, une séquence MEP :</p>
+    <ol class="steps" style="margin-top:8px;font-size:14px"><li><b>Montrer</b> : « Aujourd'hui je vous parle de ma formule dégradé + barbe », photo du résultat.</li><li><b>Expliquer</b> : ce qu'il y a dedans, la durée, le prix, comment ça se passe.</li><li><b>Proposer</b> : sondage « Tu veux un créneau cette semaine ? ». Chaque oui reçoit le lien en message.</li></ol></section>
+  <section class="card"><h2>Ce qui marche en 2026</h2><ul class="clean stack">${RULES_2026.map(r=>`<li><b>${esc(r[0])}</b><div class="muted" style="font-size:13.5px">${esc(r[1])} <a href="${r[2]}" target="_blank" rel="noopener">Source</a></div></li>`).join("")}</ul></section>
+  <section class="card"><h2>Le fil rouge coulisses</h2>
+    <p style="font-size:14px">À 10K, ta meilleure vidéo sera « il y a 9 mois j'avais 645 abonnés ». Elle se prépare maintenant : tout va dans l'album <b>ARCHIVE 10K</b>.</p>
+    <ul style="margin:10px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px"><li>Le Jour Zéro, à filmer cette semaine.</li><li>Une capture du profil le 1er de chaque mois.</li><li>Tes premières fois et tes ratés (le bêtisier des 10K).</li><li>Ton setup qui évolue, le salon vide puis plein.</li><li>Un vocal à toi-même sur tes doutes, une fois par mois.</li></ul></section>`;
+}
+
+function viewIdees(){
+  const f=S.ideaFilter;
+  const chips=[["all","Tous"],...Object.entries(GOALS)].map(([k,l])=>`<button type="button" class="chip chip-btn" aria-pressed="${f===k}" data-filter="${k}">${l}</button>`).join("");
+  const cp=currentPhase();
+  let body="";
+  if(f==="ess"){
+    body=`<p class="muted" style="font-size:13.5px">Les réels d'essai partent d'abord chez des gens qui ne te suivent pas. Méthode : même coupe, vraie variante (autre hook, autre ordre des plans). Au bout de 72 h, un essai gagne s'il fait 2 fois ta médiane récente (environ 6 900 vues) : tu le partages à tous et son hook devient un modèle.</p>
+    ${TRIALS.map((x,i)=>`<article class="concept"><div class="meta"><span class="chip acc">Essai ${i+1}</span></div><h3>${esc(x[0])}</h3><div class="hook">${esc(x[1])}</div>
+      <dl><dt>Déroulé</dt><dd>${esc(x[2])}</dd><dt>CTA</dt><dd>${esc(x[3])}</dd></dl><div><button type="button" class="btn small" data-copy="${esc(x[1].replace(/[«»]/g,"").trim())}">Copier le hook</button></div></article>`).join("")}`;
+  } else {
+    const list=CONCEPTS.filter(c=>f==="all"||c.g===f).sort((a,b)=>(a.p>cp)-(b.p>cp)||a.p-b.p);
+    body=list.map(c=>`<article class="concept" style="${c.p>cp?"opacity:.62":""}"><div class="meta"><span class="chip acc">${GOALS[c.g]}</span><span class="chip">${c.p>cp?"Dès la phase "+c.p:"Dispo maintenant"}</span></div>
+      <h3>${esc(c.t)}</h3><div class="hook">${esc(c.hook)}</div>
+      <dl><dt>Plans</dt><dd>${esc(c.shots)}</dd><dt>Légende</dt><dd>${esc(c.cap)}</dd>${c.note?`<dt>Note</dt><dd class="muted">${esc(c.note)}</dd>`:""}</dl>
+      <div class="row"><button type="button" class="btn small" data-copy="${esc(c.hook)}">Copier le hook</button><button type="button" class="btn small" data-copy="${esc(c.cap)}">Copier la légende</button></div></article>`).join("");
+  }
+  return `<div class="section-title"><h2>Les idées</h2><span class="eyebrow">Tu ne te demandes plus quoi poster</span></div>
+  <div class="chips" role="group" aria-label="Filtrer par but">${chips}</div>
+  <div class="stack">${body}</div>`;
+}
+
+function viewMontage(){
+  return `<div class="section-title"><h2>Claude, ton monteur</h2><span class="eyebrow">Tu filmes, Claude monte</span></div>
+  <p style="font-size:14.5px">Tu envoies tes rushes dans l'appli Claude avec un prompt prêt à copier, et tu récupères un reel vertical sous-titré, prêt à poster. Toi, tu gardes le dernier mot : l'accroche et le rythme se valident à l'œil.</p>
+  <section class="card"><h2>1. Une seule fois : le setup</h2>
+    <ol class="steps" style="font-size:14px"><li>Installe l'appli Claude et crée ton compte.</li><li>Crée un projet nommé <b>Montage Viktus</b>.</li><li>Colle les instructions ci-dessous dans les instructions du projet. Claude saura ton style à chaque montage.</li><li>Dans l'appareil photo de l'iPhone, filme en <b>1080p à 30 i/s</b> : fichiers légers, envoi rapide.</li></ol>
+    <div style="margin-top:12px"><div class="copyrow"><span class="eyebrow">Instructions du projet</span><button class="btn small primary" type="button" data-copy="${esc(PROJECT_INSTRUCTIONS)}">Copier</button></div><div class="copybox">${esc(PROJECT_INSTRUCTIONS)}</div></div></section>
+  <section class="card"><h2>2. Au fauteuil : le kit 4 plans</h2>
+    <div class="split"><ol class="steps" style="font-size:14px"><li><b>L'avant</b> : face et profil, 3 s, le client regarde l'objectif.</li><li><b>Le process</b> : tondeuse ou rasoir en très gros plan, 15 s, son brut.</li><li><b>Le reveal</b> : 360° sur la chaise ou face au miroir, 5 s.</li><li><b>La réaction</b> : le client qui se découvre, 5 s.</li></ol>
+    ${safeZoneSvg()}</div>
+    <p class="muted" style="font-size:13px;margin-top:8px">Toujours l'accord du client avant de filmer, par écrit (un message suffit). Pour un joueur pro, vérifie aussi avec le club.</p></section>
+  <section class="card"><h2>3. Le dimanche : monter avec Claude</h2>
+    <ol class="steps" style="font-size:14px"><li>Ouvre le projet Montage Viktus, nouveau chat.</li><li>Joins les clips dans l'ordre et colle le bon prompt ci-dessous.</li><li>Claude te renvoie la vidéo. Demande les retouches en une phrase : « hook plus gros », « coupe le plan 3 à 2 s ».</li><li>Regarde-la sur ton téléphone, son coupé puis son activé.</li><li>Programme-la dans Instagram, ajoute la <b>musique tendance depuis Instagram</b> et géolocalise The Barbers.</li></ol>
+    <p class="muted" style="font-size:13px;margin-top:8px">Si un fichier est trop lourd à envoyer, coupe le clip en deux ou refilme en 1080p.</p></section>
+  <section class="stack"><div class="section-title"><h2 style="font-size:20px">Les prompts à copier</h2></div>
+    ${PROMPTS.map(p=>`<article class="concept"><div class="copyrow"><h3>${esc(p[0])}</h3><button class="btn small" type="button" data-copy="${esc(p[1])}">Copier</button></div><div class="copybox">${esc(p[1])}</div></article>`).join("")}</section>
+  <section class="card"><h2>Avant de publier : la checklist</h2>
+    <ul style="margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px;font-size:14px"><li>Le hook se lit dès la première image.</li><li>Aucun filigrane d'une autre appli.</li><li>Rien d'important caché par l'interface d'Instagram.</li><li>« Strasbourg » dans la légende, géolocalisation, 3 à 5 hashtags.</li><li>Une question ou un appel à réserver à la fin.</li></ul></section>`;
+}
+function safeZoneSvg(){
+  return `<svg viewBox="0 0 180 320" role="img" aria-label="Zone sûre d'un reel vertical" style="width:100%;max-width:180px;justify-self:center">
+   <rect x="1" y="1" width="178" height="318" rx="16" fill="var(--surface-2)" stroke="var(--line)"/>
+   <rect x="11" y="45" width="158" height="163" rx="6" fill="none" stroke="var(--accent)" stroke-dasharray="4 4"/>
+   <rect x="1" y="1" width="178" height="44" rx="16" fill="var(--line)" opacity=".55"/>
+   <rect x="1" y="208" width="178" height="111" rx="16" fill="var(--line)" opacity=".55"/>
+   <text x="90" y="27" text-anchor="middle" font-size="10.5" fill="var(--muted)" font-family="IBM Plex Mono, monospace">14 % haut</text>
+   <text x="90" y="80" text-anchor="middle" font-size="12" font-weight="700" fill="var(--fg)" font-family="Manrope, sans-serif">HOOK ICI</text>
+   <text x="90" y="130" text-anchor="middle" font-size="10.5" fill="var(--muted)" font-family="IBM Plex Mono, monospace">zone sûre</text>
+   <text x="90" y="268" text-anchor="middle" font-size="10.5" fill="var(--muted)" font-family="IBM Plex Mono, monospace">35 % bas</text></svg>`;
+}
+
+function followersChart(){
+  const W=400,H=250,L=44,R=14,T=24,B=34;
+  const x0="2026-11-12",x1="2027-08-31", span=diffDays(x0,x1);
+  const X=d=>L+(W-L-R)*diffDays(x0,d)/span, Y=v=>H-B-(H-T-B)*v/10000;
+  const tpath=TARGETS.map((t,i)=>`${i?"L":"M"}${X(t[0]).toFixed(1)} ${Y(t[1]).toFixed(1)}`).join(" ");
+  const m={"2026-11-12":AUDIT.followers}; Object.keys(S.stats).forEach(k=>{if(k>="2026-11-12")m[k]=Number(S.stats[k].followers)||0});
+  const real=Object.keys(m).sort().map(k=>[k,m[k]]);
+  const rpath=real.map((p,i)=>`${i?"L":"M"}${X(p[0]).toFixed(1)} ${Y(p[1]).toFixed(1)}`).join(" ");
+  const last=real[real.length-1];
+  const grid=[0,2500,5000,7500,10000].map(v=>`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end" font-size="10.5" fill="var(--muted)" font-family="IBM Plex Mono, monospace">${v?fmt(v):"0"}</text>`).join("");
+  const months=["2026-12-01","2027-02-01","2027-04-01","2027-06-01","2027-08-01"].map(m=>`<text x="${X(m)}" y="${H-B+18}" text-anchor="middle" font-size="10.5" fill="var(--muted)" font-family="IBM Plex Mono, monospace">${MONTHS[parseISO(m).getMonth()]}</text>`).join("");
+  const tmarks=TARGETS.slice(1).filter(t=>[1000,2500,5000,10000].includes(t[1])).map(t=>`<circle cx="${X(t[0])}" cy="${Y(t[1])}" r="3.5" fill="var(--muted)"><title>Objectif ${short(t[0])} : ${fmt(t[1])}</title></circle><text x="${X(t[0])}" y="${Y(t[1])-10}" text-anchor="${t[1]===10000?"end":"middle"}" font-size="11.5" fill="var(--muted)" font-family="IBM Plex Mono, monospace">${fmt(t[1])}</text>`).join("");
+  const rmarks=real.map(p=>`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4" fill="var(--accent)"><title>${short(p[0])} : ${fmt(p[1])} abonnés</title></circle>`).join("");
+  const diff=last[1]-targetAt(last[0]);
+  return `<div class="chartbox"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Abonnés réels comparés à la trajectoire objectif">
+    ${grid}${months}
+    <path d="${tpath}" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 5"/>${tmarks}
+    <path d="${rpath}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>${rmarks}
+  </svg></div><p class="muted" style="font-size:12.5px;margin-top:6px">Trait plein : tes relevés. Pointillés : la trajectoire objectif. Au ${short(last[0])} : <b>${fmt(last[1])} abonnés</b>, ${diff>0?`<b style="color:var(--good)">${fmt(diff)} au-dessus de l'objectif</b>`:diff===0?`<b>pile sur l'objectif</b>`:`<b style="color:var(--warn)">${fmt(-diff)} sous l'objectif</b>`}</p>`;
+}
+
+function viewSuivi(){
+  const lf=latestFollowers();
+  const [a,b]=weekRange(S.today); const wk=postsInRange(a,b);
+  const hooks=[...S.hooks].sort((x,y)=>String(y.date).localeCompare(String(x.date)));
+  return `<div class="section-title"><h2>Ton suivi</h2><span class="eyebrow">Hugo le voit aussi</span></div>
+  <div class="grid3">
+    <div class="stat"><div class="v num">${fmt(lf.v)}</div><div class="l">abonnés</div><div class="s muted">relevé du ${short(lf.date)}</div></div>
+    <div class="stat"><div class="v num">${streak()}</div><div class="l">jours de série</div><div class="s muted">journées à 60 % ou plus</div></div>
+    <div class="stat"><div class="v num">${wk.done}/${wk.plan}</div><div class="l">publications cette semaine</div><div class="s muted">reels et essais</div></div>
+  </div>
+  <section class="card"><h2>Ta courbe vers 10K</h2>${followersChart()}
+    <form id="f-followers" class="row" style="margin-top:12px;align-items:flex-end">
+      <div class="field" style="flex:1 1 140px"><label for="ff-date">Date</label><input type="date" id="ff-date" value="${S.today}" required></div>
+      <div class="field" style="flex:1 1 140px"><label for="ff-n">Abonnés</label><input type="number" id="ff-n" inputmode="numeric" min="0" placeholder="${lf.v}" required></div>
+      <button class="btn primary" type="submit" ${S.readOnly?"disabled":""}>Enregistrer</button></form></section>
+  <section class="card"><h2>Le carnet des hooks</h2>
+    <p class="muted" style="font-size:13.5px;margin-bottom:10px">Note chaque reel 72 h après : c'est comme ça qu'on trouve tes meilleurs hooks.</p>
+    <form id="f-hook" class="stack">
+      <div class="grid2"><div class="field"><label for="fh-date">Date</label><input type="date" id="fh-date" value="${S.today}" required></div>
+      <div class="field"><label for="fh-kind">Type</label><select id="fh-kind"><option value="reel">Reel</option><option value="essai">Réel d'essai</option><option value="carrousel">Carrousel</option></select></div></div>
+      <div class="field"><label for="fh-hook">Hook</label><input type="text" id="fh-hook" placeholder="Il m'a dit : fais ce que tu veux" required></div>
+      <div class="grid3"><div class="field"><label for="fh-views">Vues à 72 h</label><input type="number" id="fh-views" min="0" inputmode="numeric"></div>
+      <div class="field"><label for="fh-shares">Partages</label><input type="number" id="fh-shares" min="0" inputmode="numeric"></div>
+      <div class="field"><label for="fh-follows">Abonnés gagnés</label><input type="number" id="fh-follows" min="0" inputmode="numeric"></div></div>
+      <div><button class="btn primary" type="submit" ${S.readOnly?"disabled":""}>Ajouter au carnet</button></div></form>
+    <div style="margin-top:14px">${hooks.length?`<div class="tablewrap"><table><thead><tr><th>Date</th><th>Hook</th><th class="r">Vues</th><th class="r">Partages</th><th class="r">Abo.</th></tr></thead><tbody>
+      ${hooks.map(h=>{const win=Number(h.views)>=AUDIT.median12*2;return `<tr><td class="num" style="white-space:nowrap">${esc(short(h.date))}${h.kind==="essai"?' <span class="chip acc" style="padding:1px 6px">essai</span>':""}</td><td>${esc(h.hook)}${win?' <span class="chip good" style="padding:1px 6px">gagnant</span>':""}</td><td class="r num">${h.views!=null&&h.views!==""?fmt(h.views):"·"}</td><td class="r num">${h.shares!=null&&h.shares!==""?fmt(h.shares):"·"}</td><td class="r num">${h.follows!=null&&h.follows!==""?fmt(h.follows):"·"}</td></tr>`}).join("")}</tbody></table></div>`
+      :`<p class="empty">Ton premier reel noté apparaîtra ici. Un hook gagnant (2 fois ta médiane, soit environ ${fmt(AUDIT.median12*2)} vues) est marqué automatiquement.</p>`}</div></section>
+  <section class="card"><h2>Les premières fois</h2><ul class="clean">${FIRSTS.map(f=>taskRow({id:f[0],label:f[1],hint:""},!!S.firsts[f[0]],"first")).join("")}</ul></section>
+  <section class="card"><h2>La revue du 1er du mois (20 min)</h2>
+    <ol class="steps" style="font-size:14px"><li>Capture du profil et des statistiques dans ARCHIVE 10K.</li><li>Top 3 des reels du mois : on en tourne une nouvelle version.</li><li>Le flop du mois : on comprend pourquoi, on ne le refait pas.</li><li>Relevé des abonnés ici.</li><li>Avec Hugo : on reste dans la phase ou on passe la porte.</li></ol></section>`;
+}
+
+function viewCoach(){
+  const lf=latestFollowers(); const tgt=targetAt(lf.date);
+  const last7=[...Array(7)].map((_,i)=>addDays(S.today,-i)).filter(d=>d>=START);
+  let tot=0,dn=0; last7.forEach(d=>{const t=tasksFor(d);tot+=t.length;const x=(S.days[d]&&S.days[d].done)||{};dn+=t.filter(k=>x[k.id]).length});
+  const [a,b]=weekRange(S.today); const wk=postsInRange(a,b);
+  const lastAct=Object.values(S.days).map(d=>d.updatedAt).filter(Boolean).sort().pop();
+  const heatDays=[...Array(28)].map((_,i)=>addDays(S.today,-27+i));
+  const heat=heatDays.map(d=>{const p=dayPct(d);const before=d<START;const bg=before||p===null?"transparent":`color-mix(in srgb, var(--accent) ${Math.round(12+p*88)}%, transparent)`;
+    return `<div title="${esc(nice(d))}${p!==null&&!before?" : "+Math.round(p*100)+" %":""}" style="background:${bg};${p===1?"color:var(--accent-ink)":""}">${parseISO(d).getDate()}</div>`}).join("");
+  const hooks=[...S.hooks].sort((x,y)=>String(y.date).localeCompare(String(x.date))).slice(0,8);
+  const firstsDone=FIRSTS.filter(f=>S.firsts[f[0]]).length;
+  const late=lastAct?diffDays(lastAct.slice(0,10),S.today):null;
+  return `<div class="section-title"><h2>Coach</h2><span class="eyebrow">Visible par toi seul</span></div>
+  <div class="grid3">
+    <div class="stat"><div class="v num">${streak()}</div><div class="l">jours de série</div></div>
+    <div class="stat"><div class="v num">${tot?Math.round(dn/tot*100):0} %</div><div class="l">tâches faites sur 7 jours</div><div class="s muted">${dn} sur ${tot}</div></div>
+    <div class="stat"><div class="v num">${wk.done}/${wk.plan}</div><div class="l">publications cette semaine</div></div>
+    <div class="stat"><div class="v num">${fmt(lf.v)}</div><div class="l">abonnés (${short(lf.date)})</div><div class="s" style="color:${lf.v>=tgt?"var(--good)":"var(--warn)"}">objectif du jour : ${fmt(tgt)}</div></div>
+    <div class="stat"><div class="v num">${firstsDone}/${FIRSTS.length}</div><div class="l">premières fois</div></div>
+    <div class="stat"><div class="v" style="font-size:22px">${lastAct?(late===0?"Aujourd'hui":late===1?"Hier":"Il y a "+late+" j"):"Jamais"}</div><div class="l">dernière activité</div>${late!==null&&late>=3?'<div class="s" style="color:var(--bad)">Relance-le</div>':""}</div>
+  </div>
+  <div class="split">
+    <section class="card"><h2>Le mot du coach</h2><p class="muted" style="font-size:13px;margin-bottom:8px">Il s'affiche en haut de son écran Aujourd'hui.</p>
+      <form id="f-coach" class="stack"><div class="field"><label for="fc-msg">Message à Victor</label><textarea id="fc-msg">${esc(S.cfg.coachMessage||"")}</textarea></div>
+      <div class="field"><label for="fc-phase">Phase en cours</label><select id="fc-phase"><option value="0" ${!Number(S.cfg.phase)?"selected":""}>Automatique (selon la date : phase ${phaseByDate(S.today<START?START:S.today)})</option>${PHASES.map(p=>`<option value="${p.n}" ${Number(S.cfg.phase)===p.n?"selected":""}>Phase ${p.n} · ${esc(p.name)}</option>`).join("")}</select></div>
+      <div><button class="btn primary" type="submit">Enregistrer</button></div></form></section>
+    <section class="card"><h2>Ses 28 derniers jours</h2><div class="heat">${heat}</div>
+      <p class="muted" style="font-size:12.5px;margin-top:8px">Plus la case est rose, plus la to-do du jour a été faite.</p></section>
+  </div>
+  <section class="card"><h2>Abonnés vs objectif</h2>${followersChart()}</section>
+  <section class="card"><h2>Ses derniers hooks</h2>${hooks.length?`<div class="tablewrap"><table><thead><tr><th>Date</th><th>Type</th><th>Hook</th><th class="r">Vues</th><th class="r">Partages</th></tr></thead><tbody>${hooks.map(h=>`<tr><td class="num">${esc(short(h.date))}</td><td>${esc(h.kind)}</td><td>${esc(h.hook)}</td><td class="r num">${h.views?fmt(h.views):"·"}</td><td class="r num">${h.shares?fmt(h.shares):"·"}</td></tr>`).join("")}</tbody></table></div>`:`<p class="empty">Rien dans le carnet pour l'instant.</p>`}</section>`;
+}
+
+/* ============ ÉCRITURES ============ */
+const queues={};
+function enqueue(path,fn){const p=(queues[path]||Promise.resolve()).then(fn,fn);queues[path]=p.catch(()=>{});return p}
+let toastT; function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,2600)}
+function onWriteError(e){
+  if(e&&e.code==="invalid_argument"){S.readOnly=true;render(true);toast("Pas enregistré : accès en lecture seule.")}
+  else if(e&&e.code==="quota_exceeded") toast("Stockage plein : préviens Hugo.");
+  else toast("Pas enregistré, réessaie dans un instant.");
+}
+function clone(o){return JSON.parse(JSON.stringify(o||{}))}
+async function write(path,data){
+  if(!S.db) return; // aperçu : en mémoire seulement
+  return enqueue(path,()=>S.db.doc(path).set(data)).catch(onWriteError);
+}
+function toggle(scope,id,val){
+  if(scope==="day"){
+    const d=clone(S.days[S.today]); d.done=d.done||{}; if(val) d.done[id]=true; else delete d.done[id];
+    d.updatedAt=new Date().toISOString(); S.days[S.today]=d; render(); write("days/"+S.today,d);
+  } else {
+    const f=clone(S.firsts); if(val) f[id]=S.today; else delete f[id]; S.firsts=f; render();
+    write("state/firsts",{done:f,updatedAt:new Date().toISOString()});
+    const d=clone(S.days[S.today]); d.updatedAt=new Date().toISOString(); d.done=d.done||{}; S.days[S.today]=d; write("days/"+S.today,d);
+  }
+}
+
+/* ============ ÉVÉNEMENTS ============ */
+document.addEventListener("change",e=>{
+  const el=e.target; if(el.matches('.task input[type=checkbox]')) toggle(el.dataset.scope,el.dataset.id,el.checked);
+});
+document.addEventListener("click",async e=>{
+  const c=e.target.closest("[data-copy]");
+  if(c){const txt=c.getAttribute("data-copy");try{await navigator.clipboard.writeText(txt);toast("Copié")}catch(_){const box=c.closest(".copyrow")?.nextElementSibling||c.closest("article")?.querySelector(".copybox");if(box){const r=document.createRange();r.selectNodeContents(box);const s=getSelection();s.removeAllRanges();s.addRange(r)}toast("Sélectionné : copie-le à la main")}return}
+  const f=e.target.closest("[data-filter]"); if(f){S.ideaFilter=f.dataset.filter;render(true);return}
+  const a=e.target.closest("[data-action]"); if(!a) return;
+  if(a.dataset.action==="close-sheet") $("#sheet").hidden=true;
+});
+$("#btn-install").addEventListener("click",()=>{$("#sheet").hidden=false});
+$("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("#sheet").hidden=true});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#sheet").hidden=true});
+document.addEventListener("submit",e=>{
+  e.preventDefault(); const id=e.target.id;
+  if(id==="f-followers"){const d=$("#ff-date").value,n=Number($("#ff-n").value);if(!d||!(n>=0))return;
+    S.stats={...S.stats,[d]:{followers:n,at:new Date().toISOString()}};render(true);write("stats/"+d,{followers:n,at:new Date().toISOString()});toast("Abonnés enregistrés")}
+  if(id==="f-hook"){const h={date:$("#fh-date").value,kind:$("#fh-kind").value,hook:$("#fh-hook").value.trim(),
+      views:$("#fh-views").value===""?null:Number($("#fh-views").value),shares:$("#fh-shares").value===""?null:Number($("#fh-shares").value),
+      follows:$("#fh-follows").value===""?null:Number($("#fh-follows").value),at:new Date().toISOString()};
+    if(!h.hook) return; const hid=h.date+"-"+Math.random().toString(36).slice(2,8);
+    S.hooks=[...S.hooks,{...h,id:hid}];render(true);write("hooks/"+hid,h);toast("Ajouté au carnet")}
+  if(id==="f-coach"){const msg=$("#fc-msg").value.trim(),ph=Number($("#fc-phase").value)||0;
+    S.cfg={...S.cfg,coachMessage:msg,phase:ph,coachAt:new Date().toISOString()};render(true);write("state/config",clone(S.cfg));toast("Enregistré")}
+});
+
+/* ============ ROUTAGE ============ */
+function route(){const h=location.hash.replace("#","");S.view=["today","plan","idees","montage","suivi","coach"].includes(h)?h:"today";render(true);window.scrollTo(0,0)}
+window.addEventListener("hashchange",route);
+
+/* ============ DONNÉES ============ */
+async function boot(){
+  route();
+  if(!window.claude||!window.claude.use){return}
+  S.loadingNote="Chargement de ta progression..."; render(true);
+  const [db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+  if(user){ try{S.isOwner=await user.isOwner()}catch(_){}
+    try{const w=await user.can("data.write"); if(w===false) S.readOnly=true}catch(_){} }
+  if(!db){S.loadingNote="";render(true);return}
+  S.db=db; S.live=true;
+  const timer=setTimeout(()=>{S.loadingNote="Tes données ne répondent pas encore. Vérifie ta connexion.";render()},10000);
+  const loaded=()=>{clearTimeout(timer);if(S.loadingNote){S.loadingNote="";render()}};
+  const fail=()=>{clearTimeout(timer);S.loadingNote="Connexion aux données perdue. Recharge la page plus tard.";render()};
+  db.doc("state/config").onSnapshot(s=>{if(s.exists)S.cfg={...S.cfg,...s.data()};if(!s.metadata.fromCache)loaded();render()},fail);
+  db.doc("state/firsts").onSnapshot(s=>{S.firsts=s.exists?{...(s.data().done||{})}:{};render()},fail);
+  db.collection("days").onSnapshot(q=>{const o={};q.docs.forEach(d=>o[d.id]=d.data());S.days=o;if(!q.metadata.fromCache)loaded();render()},fail);
+  db.collection("stats").onSnapshot(q=>{const o={};q.docs.forEach(d=>o[d.id]=d.data());S.stats=o;render()},fail);
+  db.collection("hooks").onSnapshot(q=>{S.hooks=q.docs.map(d=>({id:d.id,...d.data()}));render()},fail);
+  render(true);
+}
+setInterval(()=>{const t=iso(new Date());if(t!==S.today){S.today=t;render()}},60000);
+boot();
+</script>

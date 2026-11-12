@@ -1,0 +1,931 @@
+@import "tailwindcss";
+
+/*
+ * Direction artistique « Vitrine de nuit » : verre fumé, néon rose, chrome.
+ * Le vrai flou (backdrop-filter) est réservé aux surfaces sous lesquelles du contenu défile :
+ * barre du haut, barre d'onglets, rail, feuilles. Les panneaux sont translucides sans flou :
+ * sur un fond de lumières douces, le rendu est le même et le défilement reste fluide.
+ */
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-ink: var(--accent-ink);
+  --color-good: var(--good);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+  --font-sans: "Manrope Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Anton", Impact, "Arial Narrow", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+:root {
+  color-scheme: dark;
+
+  --bg: #131217;
+  --surface: #1c1a22;
+  --line: #363241;
+  --fg: #f4f2f7;
+  /* Un cran plus clairs que dans le prototype : sur le verre éclairé par le néon,
+     le texte secondaire et le rose doivent garder un contraste AA (4,5:1). */
+  --muted: #b5b1c1;
+  --accent: #ff4f8b;
+  --accent-text: #ff8fb3;
+  --accent-ink: #1b0a12;
+  --good: #4fd18b;
+  --warn: #f2b84b;
+  --bad: #ff6b6b;
+
+  /* Lumières du fond */
+  --halo-rgb: 255 79 139;
+  --halo-a: 0.36;
+  --light-rgb: 201 211 224;
+  --light-a: 0.22;
+  --streak-a: 0.05;
+  --grain-a: 0.07;
+
+  /* Verre fumé : un reflet en haut à gauche, un voile clair, une teinte sombre translucide. */
+  --panel-fill:
+    radial-gradient(130% 70% at 0% 0%, rgb(255 255 255 / 0.06), transparent 62%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.045), rgb(255 255 255 / 0.015)),
+    rgb(24 22 30 / 0.36);
+  --panel-quiet-fill: rgb(24 22 30 / 0.24);
+  --panel-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.1), inset 0 -1px 0 rgb(0 0 0 / 0.3),
+    0 24px 44px -26px rgb(0 0 0 / 0.8);
+  --rim-hi: rgb(255 255 255 / 0.6);
+  --rim-mid: rgb(255 255 255 / 0.08);
+  --rim-lo: rgb(255 255 255 / 0.2);
+  --chrome-fill: rgb(21 19 27 / 0.62);
+  --chrome-solid: #1a1820;
+  --chrome-shadow: inset 0 1px 0 rgb(255 255 255 / 0.08), 0 18px 40px -18px rgb(0 0 0 / 0.75);
+  --well-fill: rgb(7 6 10 / 0.42);
+  --well-line: rgb(255 255 255 / 0.09);
+  --well-shadow: inset 0 1px 3px rgb(0 0 0 / 0.35);
+  --control-fill: rgb(255 255 255 / 0.07);
+  --control-fill-hover: rgb(255 255 255 / 0.13);
+  --control-line: rgb(255 255 255 / 0.14);
+  --control-line-hover: rgb(255 255 255 / 0.3);
+  --scrim: rgb(5 4 8 / 0.6);
+
+  --radius-panel: 22px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f6f4f8;
+  --surface: #ffffff;
+  --line: #dbd6e2;
+  --fg: #17151c;
+  --muted: #5f5b6b;
+  --accent: #d3226a;
+  --accent-text: #b81a5a;
+  --accent-ink: #ffffff;
+  --good: #14804a;
+  --warn: #8a5a0f;
+  --bad: #c03636;
+
+  --halo-rgb: 211 34 106;
+  --halo-a: 0.2;
+  --light-rgb: 120 134 156;
+  --light-a: 0.16;
+  --streak-a: 0.55;
+  --grain-a: 0.05;
+
+  /* Verre laiteux */
+  --panel-fill: linear-gradient(180deg, rgb(255 255 255 / 0.88), rgb(255 255 255 / 0.66));
+  --panel-quiet-fill: rgb(255 255 255 / 0.42);
+  --panel-shadow: inset 0 1px 0 rgb(255 255 255 / 0.95), 0 22px 40px -28px rgb(52 36 70 / 0.42);
+  --rim-hi: rgb(255 255 255 / 1);
+  --rim-mid: rgb(23 21 28 / 0.08);
+  --rim-lo: rgb(23 21 28 / 0.16);
+  --chrome-fill: rgb(250 248 252 / 0.7);
+  --chrome-solid: #ffffff;
+  --chrome-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9), 0 18px 36px -22px rgb(52 36 70 / 0.4);
+  --well-fill: rgb(23 21 28 / 0.045);
+  --well-line: rgb(23 21 28 / 0.11);
+  --well-shadow: inset 0 1px 2px rgb(23 21 28 / 0.07);
+  --control-fill: rgb(23 21 28 / 0.045);
+  --control-fill-hover: rgb(23 21 28 / 0.09);
+  --control-line: rgb(23 21 28 / 0.16);
+  --control-line-hover: rgb(23 21 28 / 0.34);
+  --scrim: rgb(23 21 28 / 0.38);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    background: var(--bg);
+  }
+
+  /* Pas de fond sur body : il recouvrirait le fond lumineux, placé juste derrière le contenu. */
+  body {
+    min-height: 100dvh;
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* ---------- Fond : la vitrine, de nuit ---------- */
+  .ambient {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    height: 100vh;
+    height: 100lvh;
+    overflow: hidden;
+    pointer-events: none;
+    /* Trois lumières fixes : le chrome en haut à droite, le néon à gauche, un rappel froid à droite. */
+    background:
+      radial-gradient(78% 44% at 94% 2%, rgb(var(--light-rgb) / var(--light-a)), transparent 74%),
+      radial-gradient(86% 46% at 6% 30%, rgb(var(--halo-rgb) / var(--halo-a)), transparent 74%),
+      radial-gradient(
+        70% 36% at 100% 70%,
+        rgb(var(--light-rgb) / calc(var(--light-a) * 0.62)),
+        transparent 74%
+      ),
+      linear-gradient(
+        118deg,
+        transparent 34%,
+        rgb(255 255 255 / var(--streak-a)) 41%,
+        transparent 49%,
+        transparent 58%,
+        rgb(255 255 255 / calc(var(--streak-a) * 0.7)) 64%,
+        transparent 72%
+      ),
+      var(--bg);
+  }
+
+  /* Le « fondu » en lumière : un halo bas qui monte avec la progression de la phase. */
+  .ambient__halo {
+    position: absolute;
+    right: -25%;
+    bottom: -12%;
+    left: -25%;
+    height: 80%;
+    background: radial-gradient(
+      50% 62% at 50% 100%,
+      rgb(var(--halo-rgb) / var(--halo-a)),
+      rgb(var(--halo-rgb) / calc(var(--halo-a) * 0.38)) 46%,
+      transparent 74%
+    );
+    opacity: calc(0.7 + var(--halo, 0) * 0.3);
+    transform: translate3d(0, calc((1 - var(--halo, 0)) * 30%), 0);
+    transition:
+      transform 1.4s var(--ease-out),
+      opacity 1.4s ease;
+  }
+
+  .ambient__grain {
+    position: absolute;
+    inset: 0;
+    opacity: var(--grain-a);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+
+  /* ---------- Verre ---------- */
+  .panel,
+  .chrome {
+    position: relative;
+    isolation: isolate;
+  }
+
+  /* Liseré spéculaire : la lumière accroche en haut à gauche et retombe en bas à droite. */
+  .panel::before,
+  .chrome::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(
+      135deg,
+      var(--rim-hi),
+      var(--rim-mid) 38%,
+      var(--rim-mid) 62%,
+      var(--rim-lo)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+
+  .panel {
+    border-radius: var(--radius-panel);
+    background: var(--panel-fill);
+    box-shadow: var(--panel-shadow);
+  }
+
+  /* Panneau en retrait : ce qui n'est pas encore disponible. */
+  .panel--quiet {
+    background: var(--panel-quiet-fill);
+    box-shadow: none;
+  }
+  .panel--quiet::before {
+    background: var(--rim-mid);
+  }
+
+  /* Panneau allumé : la phase en cours prend le néon. */
+  .panel--lit {
+    background:
+      linear-gradient(180deg, rgb(var(--halo-rgb) / 0.17), rgb(var(--halo-rgb) / 0.03) 70%),
+      var(--panel-fill);
+    box-shadow:
+      var(--panel-shadow),
+      0 0 34px -10px rgb(var(--halo-rgb) / 0.55);
+  }
+  .panel--lit::before {
+    background: linear-gradient(
+      135deg,
+      rgb(var(--halo-rgb) / 0.95),
+      rgb(var(--halo-rgb) / 0.28) 40%,
+      rgb(var(--halo-rgb) / 0.22) 62%,
+      rgb(var(--halo-rgb) / 0.62)
+    );
+  }
+
+  .chrome {
+    background: var(--chrome-fill);
+    box-shadow: var(--chrome-shadow);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+  }
+
+  /* Barre pleine largeur : pas de liseré, juste un filet sous le verre. */
+  .chrome--bar {
+    box-shadow: inset 0 -1px 0 var(--well-line);
+  }
+  .chrome--bar::before {
+    display: none;
+  }
+
+  .well {
+    border-radius: 14px;
+    background: var(--well-fill);
+    box-shadow:
+      inset 0 0 0 1px var(--well-line),
+      var(--well-shadow);
+  }
+
+  /* ---------- Le fondu : la jauge signature ---------- */
+  .fade-gauge {
+    position: relative;
+    height: 12px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: var(--well-fill);
+    box-shadow:
+      inset 0 0 0 1px var(--well-line),
+      var(--well-shadow);
+  }
+  .fade-gauge--thin {
+    height: 8px;
+  }
+  .fade-gauge__fill {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgb(var(--halo-rgb) / 0.1), var(--accent));
+    transform-origin: left center;
+  }
+
+  /* ---------- Typographie ---------- */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ---------- Commandes ---------- */
+  .btn {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: var(--control-fill);
+    box-shadow: inset 0 0 0 1px var(--control-line);
+    color: var(--fg);
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    user-select: none;
+    transition:
+      transform 0.16s var(--ease-out),
+      background-color 0.16s ease,
+      box-shadow 0.16s ease;
+  }
+  .btn:active {
+    transform: scale(0.96);
+  }
+  .btn--icon {
+    width: 44px;
+    padding: 0;
+  }
+  .btn--compact {
+    padding: 0 14px;
+  }
+  /* Retour visuel après une copie réussie : le liseré passe au rose un instant. */
+  .btn--done {
+    box-shadow: inset 0 0 0 1px rgb(var(--halo-rgb) / 0.75);
+    color: var(--accent-text);
+  }
+  .btn--primary {
+    background: var(--accent);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.35),
+      0 10px 24px -10px rgb(var(--halo-rgb) / 0.8);
+    color: var(--accent-ink);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--control-fill);
+    box-shadow: inset 0 0 0 1px var(--control-line);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .chip--accent {
+    background: rgb(var(--halo-rgb) / 0.12);
+    box-shadow: inset 0 0 0 1px rgb(var(--halo-rgb) / 0.5);
+    color: var(--accent-text);
+  }
+  .chip--muted {
+    color: var(--muted);
+  }
+
+  /* Filtre : une pastille de verre glisse sous le choix actif. */
+  .filter {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    padding: 0 14px;
+    border-radius: 999px;
+    color: var(--muted);
+    font-size: 13.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    transition:
+      color 0.16s ease,
+      transform 0.16s var(--ease-out);
+  }
+  .filter:active {
+    transform: scale(0.96);
+  }
+  .filter[aria-pressed="true"] {
+    color: var(--bg);
+  }
+  .filter__pill {
+    position: absolute;
+    inset: 4px 0;
+    z-index: -1;
+    border-radius: 999px;
+    background: var(--fg);
+  }
+
+  /* Onglets (barre du bas et rail) */
+  .tab {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    min-height: 52px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border-radius: 20px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    transition:
+      color 0.16s ease,
+      transform 0.16s var(--ease-out);
+  }
+  .tab--row {
+    min-height: 48px;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 0 14px;
+    border-radius: 16px;
+    font-size: 14.5px;
+  }
+  .tab:active {
+    transform: scale(0.96);
+  }
+  .tab svg {
+    width: 22px;
+    height: 22px;
+    flex: none;
+    transition: color 0.16s ease;
+  }
+  .tab[aria-current="page"] {
+    color: var(--fg);
+  }
+  .tab[aria-current="page"] svg {
+    color: var(--accent);
+  }
+  .tab__pill {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--control-fill-hover);
+    box-shadow:
+      inset 0 0 0 1px var(--control-line),
+      inset 0 1px 0 rgb(255 255 255 / 0.1);
+  }
+
+  .link {
+    color: var(--accent-text);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--halo-rgb) / 0.45);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.16s ease;
+  }
+
+  @media (hover: hover) {
+    .btn:hover {
+      background: var(--control-fill-hover);
+      box-shadow: inset 0 0 0 1px var(--control-line-hover);
+    }
+    .btn--primary:hover {
+      background: var(--accent);
+      box-shadow:
+        inset 0 1px 0 rgb(255 255 255 / 0.5),
+        0 14px 28px -10px rgb(var(--halo-rgb) / 0.95);
+    }
+    .filter:hover,
+    .tab:hover {
+      color: var(--fg);
+    }
+    .filter[aria-pressed="true"]:hover {
+      color: var(--bg);
+    }
+    .link:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  .btn:disabled {
+    cursor: default;
+    opacity: 0.55;
+  }
+
+  /* ---------- Formulaires ---------- */
+  .field {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field > label {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  /* 16px au minimum : en dessous, l'iPhone zoome sur le champ au focus. */
+  .input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 14px;
+    border-radius: 14px;
+    background: var(--well-fill);
+    box-shadow:
+      inset 0 0 0 1px var(--control-line),
+      var(--well-shadow);
+    color: var(--fg);
+    font-size: 16px;
+    transition: box-shadow 0.16s ease;
+  }
+  .input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .input[aria-invalid="true"] {
+    box-shadow: inset 0 0 0 1.5px var(--bad);
+  }
+
+  /* ---------- Tâches à cocher ---------- */
+  .task {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 6px;
+    padding: 8px 0;
+    border-top: 1px solid var(--well-line);
+  }
+  .task:first-child {
+    border-top: 0;
+  }
+  /* La case fait 28 px, sa zone tactile 44 px. */
+  .task__box {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    cursor: pointer;
+  }
+  .check {
+    display: grid;
+    width: 28px;
+    height: 28px;
+    appearance: none;
+    place-content: center;
+    border-radius: 9px;
+    background: var(--well-fill);
+    box-shadow: inset 0 0 0 2px var(--control-line-hover);
+    cursor: pointer;
+    transition:
+      background-color 0.16s ease,
+      box-shadow 0.16s ease,
+      transform 0.16s var(--ease-out);
+  }
+  .check::after {
+    content: "";
+    width: 12px;
+    height: 7px;
+    border-bottom: 3px solid var(--accent-ink);
+    border-left: 3px solid var(--accent-ink);
+    transform: rotate(-45deg) translate(1px, -1px) scale(0);
+    transition: transform 0.2s var(--ease-out);
+  }
+  .check:checked {
+    background: var(--accent);
+    box-shadow: 0 0 16px -2px rgb(var(--halo-rgb) / 0.7);
+  }
+  .check:checked::after {
+    transform: rotate(-45deg) translate(1px, -1px) scale(1);
+  }
+  .check:active {
+    transform: scale(0.88);
+  }
+  .check:disabled,
+  .task__box:has(.check:disabled) {
+    cursor: default;
+  }
+  .check:disabled:not(:checked) {
+    opacity: 0.5;
+  }
+  .task__label {
+    display: block;
+    padding-top: 10px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .task--done .task__label {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+  .task__tag {
+    /* inline-block : le tag ne reprend pas le trait qui barre une tâche faite. */
+    display: inline-block;
+    margin-right: 6px;
+    color: var(--accent-text);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Journée validée : un reflet balaie le panneau, une seule fois. */
+  .sweep {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .sweep::after {
+    content: "";
+    position: absolute;
+    top: -20%;
+    bottom: -20%;
+    left: 0;
+    width: 45%;
+    background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.16), transparent);
+    transform: translateX(-130%) skewX(-18deg);
+    animation: sweep 0.9s var(--ease-out) 0.1s 1 both;
+    pointer-events: none;
+  }
+
+  .chip--good {
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--good) 55%, transparent);
+    color: var(--good);
+  }
+
+  /* ---------- Listes ---------- */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    counter-reset: step;
+  }
+  .steps > li {
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 10px;
+    counter-increment: step;
+  }
+  .steps > li::before {
+    content: counter(step, decimal-leading-zero);
+    padding-top: 3px;
+    color: var(--accent-text);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .bullets {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .bullets > li {
+    position: relative;
+    padding-left: 18px;
+  }
+  .bullets > li::before {
+    content: "";
+    position: absolute;
+    top: 0.62em;
+    left: 2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 2px;
+    background: var(--accent);
+    transform: rotate(45deg);
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .data-table thead th {
+    padding: 0 12px 8px 0;
+    text-align: left;
+    vertical-align: bottom;
+  }
+  .data-table tbody th,
+  .data-table td {
+    padding: 10px 12px 10px 0;
+    border-top: 1px solid var(--well-line);
+    text-align: left;
+    vertical-align: top;
+  }
+  .data-table th:last-child,
+  .data-table td:last-child {
+    padding-right: 0;
+  }
+
+  /* ---------- Structure ---------- */
+  .skip-link {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 50;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: var(--fg);
+    color: var(--bg);
+    font-weight: 700;
+    transform: translateY(-160%);
+  }
+  .skip-link:focus-visible {
+    transform: none;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+  }
+
+  .app-main {
+    padding: 20px max(16px, env(safe-area-inset-right, 0px))
+      calc(104px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  }
+
+  .tabbar {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    padding: 0 max(12px, env(safe-area-inset-right, 0px))
+      calc(10px + env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+    pointer-events: none;
+  }
+  .tabbar > ul {
+    pointer-events: auto;
+  }
+
+  .toast-region {
+    position: fixed;
+    right: 16px;
+    bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+    left: 16px;
+    z-index: 40;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .toast {
+    max-width: 100%;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: var(--fg);
+    box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.6);
+    color: var(--bg);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* Feuille : en bas sur téléphone, au centre sur ordinateur. */
+  .sheet {
+    width: min(100%, 620px);
+    max-width: 100%;
+    max-height: 86dvh;
+    margin: auto auto 0;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    color: inherit;
+  }
+  .sheet::backdrop {
+    background: var(--scrim);
+  }
+  .sheet[open] {
+    animation: sheet-in 0.28s var(--ease-out);
+  }
+  .sheet[open]::backdrop {
+    animation: scrim-in 0.2s ease;
+  }
+  .sheet__body {
+    max-height: 86dvh;
+    padding: 20px 18px calc(24px + env(safe-area-inset-bottom, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-radius: 24px 24px 0 0;
+  }
+
+  @media (min-width: 1024px) {
+    .app-main {
+      padding: 44px 40px 56px 288px;
+    }
+    .toast-region {
+      bottom: 28px;
+      left: 264px;
+    }
+    .sheet {
+      margin: auto;
+    }
+    .sheet__body {
+      padding-bottom: 24px;
+      border-radius: 24px;
+    }
+  }
+
+  @keyframes sweep {
+    to {
+      transform: translateX(340%) skewX(-18deg);
+    }
+  }
+  @keyframes sheet-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+  }
+  @keyframes scrim-in {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+/* Repli si le navigateur ne sait pas flouter : verre remplacé par une surface opaque. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .chrome {
+    background: var(--chrome-solid);
+  }
+}
+
+/* L'utilisateur demande moins de transparence : surfaces pleines, plus de lumières. */
+@media (prefers-reduced-transparency: reduce) {
+  .ambient {
+    background: var(--bg);
+  }
+  .ambient__halo,
+  .ambient__grain {
+    display: none;
+  }
+  .panel,
+  .panel--quiet,
+  .panel--lit {
+    background: var(--surface);
+  }
+  .chrome {
+    background: var(--chrome-solid);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/*
+ * Mouvement réduit : on garde les fondus d'opacité et de couleur, on retire les déplacements.
+ * Les animations Motion sont coupées de leur côté par MotionConfig (reducedMotion="user").
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .btn,
+  .filter,
+  .tab {
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .btn:active,
+  .filter:active,
+  .tab:active {
+    transform: none;
+  }
+  .ambient__halo {
+    transition: opacity 0.2s ease;
+  }
+}

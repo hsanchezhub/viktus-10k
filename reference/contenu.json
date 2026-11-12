@@ -1,0 +1,779 @@
+{
+  "_note": "Contenu du game plan de Victor (@viktusblendz), extrait du prototype le 12 novembre 2026. Source de vérité du contenu : à importer tel quel, pas à réécrire.",
+  "programme": {
+    "debut": "2026-11-16",
+    "audit": {
+      "followers": 645,
+      "following": 262,
+      "posts": 87,
+      "reels": 36,
+      "totalViews": 142600,
+      "median": 2530,
+      "median12": 3450,
+      "likeRate": "2,3 %",
+      "perFollower": 220,
+      "lastReel": "6 septembre 2026",
+      "salonFollowers": 7274
+    },
+    "phases": [
+      {
+        "n": 1,
+        "name": "Le redémarrage",
+        "from": "2026-11-16",
+        "to": "2026-12-20",
+        "goal": [
+          645,
+          1000
+        ],
+        "focus": "Reprendre le rythme et poser les bases : profil refait, setup au fauteuil, premières fois.",
+        "cadence": "3 reels par semaine (mar, jeu, sam) + 1 réel d'essai le mercredi dès la semaine 2, 3 stories par jour",
+        "gate": "12 reels publiés, 28 jours de stories d'affilée, bio et à la une refaites"
+      },
+      {
+        "n": 2,
+        "name": "Le rythme",
+        "from": "2026-12-21",
+        "to": "2027-02-28",
+        "goal": [
+          1000,
+          2500
+        ],
+        "focus": "Installer les séries (Défi 10K, Les Pros) et trouver les hooks qui marchent grâce aux réels d'essai.",
+        "cadence": "3 reels + 2 réels d'essai par semaine, 1 carrousel toutes les 2 semaines, 3 à 5 stories par jour",
+        "gate": "1 reel au-dessus de 10 000 vues hors collab et 15 hooks testés dans le carnet"
+      },
+      {
+        "n": 3,
+        "name": "L'accélération",
+        "from": "2027-03-01",
+        "to": "2027-05-31",
+        "goal": [
+          2500,
+          5000
+        ],
+        "focus": "Les collabs : le salon, les joueurs (avec leur accord), les commerces de Strasbourg. Micro-trottoirs.",
+        "cadence": "4 reels + 2 réels d'essai par semaine, 1 carrousel, 1 post collaboratif par mois",
+        "gate": "5 000 abonnés et des clients qui viennent d'Instagram chaque semaine"
+      },
+      {
+        "n": 4,
+        "name": "La marque",
+        "from": "2027-06-01",
+        "to": "2027-08-31",
+        "goal": [
+          5000,
+          10000
+        ],
+        "focus": "Les séries signature et le reel « il y a 9 mois j'avais 645 abonnés ».",
+        "cadence": "4 à 5 reels + 3 réels d'essai par semaine, 1 live par mois",
+        "gate": "10 000 abonnés"
+      }
+    ],
+    "trajectoireObjectif": [
+      {
+        "date": "2026-11-12",
+        "abonnes": 645
+      },
+      {
+        "date": "2026-12-31",
+        "abonnes": 1000
+      },
+      {
+        "date": "2027-01-31",
+        "abonnes": 1700
+      },
+      {
+        "date": "2027-02-28",
+        "abonnes": 2500
+      },
+      {
+        "date": "2027-03-31",
+        "abonnes": 3300
+      },
+      {
+        "date": "2027-04-30",
+        "abonnes": 4100
+      },
+      {
+        "date": "2027-05-31",
+        "abonnes": 5000
+      },
+      {
+        "date": "2027-06-30",
+        "abonnes": 6500
+      },
+      {
+        "date": "2027-07-31",
+        "abonnes": 8200
+      },
+      {
+        "date": "2027-08-31",
+        "abonnes": 10000
+      }
+    ]
+  },
+  "premieresFois": [
+    {
+      "id": "f_bio",
+      "titre": "Refaire le nom de profil et la bio",
+      "aide": "Nom : Victor · Barbier Strasbourg. Bio dans l'onglet Plan, prête à copier."
+    },
+    {
+      "id": "f_highlights",
+      "titre": "Ranger les stories à la une en 5",
+      "aide": "Mon Histoire, Les Pros, Mes Coupes, Le Salon, Ma Vie. Mêmes couvertures avec ton logo VB."
+    },
+    {
+      "id": "f_album",
+      "titre": "Créer l'album ARCHIVE 10K sur ton téléphone",
+      "aide": "Tout ce qui servira à raconter l'avant/après va dedans."
+    },
+    {
+      "id": "f_dayzero",
+      "titre": "Filmer le Jour Zéro",
+      "aide": "30 s face caméra au salon vide : « J'ai 645 abonnés. Je me lance. Rendez-vous à 10 000. » Garde-le, même raté."
+    },
+    {
+      "id": "f_setup",
+      "titre": "Installer le support et la lumière près du fauteuil",
+      "aide": "Toujours le même angle, mains libres."
+    },
+    {
+      "id": "f_claude",
+      "titre": "Créer ton compte Claude et le projet Montage Viktus",
+      "aide": "Onglet Montage, étape 1."
+    },
+    {
+      "id": "f_firstclaude",
+      "titre": "Premier reel monté avec Claude",
+      "aide": ""
+    },
+    {
+      "id": "f_facecam",
+      "titre": "Première story face caméra",
+      "aide": "Juste toi qui parles 15 secondes. Personne ne juge, c'est un entraînement."
+    },
+    {
+      "id": "f_trial",
+      "titre": "Premier réel d'essai",
+      "aide": ""
+    },
+    {
+      "id": "f_note10",
+      "titre": "Premier « Note sur 10 » et une réponse à chaque commentaire",
+      "aide": ""
+    },
+    {
+      "id": "f_mep",
+      "titre": "Première séquence MEP en stories avec sondage",
+      "aide": ""
+    },
+    {
+      "id": "f_series",
+      "titre": "Premier épisode de la série Défi 10K",
+      "aide": ""
+    },
+    {
+      "id": "f_collab",
+      "titre": "Premier post collaboratif avec @thebarbers.pro",
+      "aide": "Le salon a 7 274 abonnés. Ta collab de septembre a fait 22 300 vues."
+    },
+    {
+      "id": "f_pro",
+      "titre": "Premier contenu avec un joueur pro, avec son accord",
+      "aide": "Demande toujours avant de filmer, et vérifie avec le club."
+    },
+    {
+      "id": "f_sunday",
+      "titre": "Premier dimanche de montage tenu en 1 heure",
+      "aide": ""
+    },
+    {
+      "id": "f_28",
+      "titre": "28 jours de stories d'affilée",
+      "aide": ""
+    }
+  ],
+  "buts": {
+    "fid": "Fidéliser",
+    "int": "Interaction",
+    "emo": "Émotion",
+    "rec": "Récompenser",
+    "ven": "Vendre",
+    "ess": "Réel d'essai"
+  },
+  "concepts": [
+    {
+      "but": "fid",
+      "desLaPhase": 1,
+      "titre": "La Transfo",
+      "hook": "Il est rentré comme ça...",
+      "plans": "Avant 1 s, tondeuse en gros plan, reveal 360° sur le temps fort, réaction",
+      "legende": "Burst fade + contour, The Barbers Illkirch. Note sur 10 ? RDV en bio.",
+      "note": "Ton format signature. Une par semaine minimum."
+    },
+    {
+      "but": "fid",
+      "desLaPhase": 1,
+      "titre": "30 minutes en 30 secondes",
+      "hook": "Un dégradé du début à la fin",
+      "plans": "Coupe complète en accéléré, vrai son de tondeuse, reveal ralenti",
+      "legende": "Taper fade de A à Z à Strasbourg. Envoie-le à celui qui doit passer chez le barbier.",
+      "note": "Format qui se partage : parfait pour toucher des non-abonnés."
+    },
+    {
+      "but": "fid",
+      "desLaPhase": 1,
+      "titre": "Burst, taper ou dégradé ?",
+      "hook": "3 coupes que tout le monde confond",
+      "plans": "3 résultats côte à côte, une phrase par coupe",
+      "legende": "Burst fade, taper ou dégradé classique : tu prends laquelle ? Réponds 1, 2 ou 3.",
+      "note": "Reprend tes stories à la une Burst Fade, Dégradé, Taper."
+    },
+    {
+      "but": "fid",
+      "desLaPhase": 2,
+      "titre": "Le rattrapage",
+      "hook": "Il sortait d'un autre barbier...",
+      "plans": "Zoom sur le défaut, réparation en accéléré, résultat",
+      "legende": "Mission rattrapage à Strasbourg. Tag le pote qui se fait rater à chaque fois.",
+      "note": "Jamais le nom de l'autre salon."
+    },
+    {
+      "but": "fid",
+      "desLaPhase": 2,
+      "titre": "Le vestiaire",
+      "hook": "Je coupe dans le vestiaire des pros",
+      "plans": "Arrivée avec la mallette, installation, coupe, joueur prêt",
+      "legende": "Quand l'équipe veut être fraîche avant le match. Barbier à domicile pour les clubs de Strasbourg.",
+      "note": "Uniquement avec l'accord du joueur et du club."
+    },
+    {
+      "but": "fid",
+      "desLaPhase": 2,
+      "titre": "3 erreurs qui ruinent ton dégradé",
+      "hook": "Arrête de faire ça chez toi",
+      "plans": "Facecam au salon, 3 gestes montrés sur un client",
+      "legende": "Les 3 erreurs que je vois tous les jours. Laquelle tu fais ?",
+      "note": "Premier vrai contenu face caméra."
+    },
+    {
+      "but": "fid",
+      "desLaPhase": 2,
+      "titre": "Quelle coupe pour ta forme de visage",
+      "hook": "Rond, carré ou ovale ?",
+      "plans": "Carrousel : une forme, une coupe, une photo",
+      "legende": "Enregistre-le pour ta prochaine coupe. Barbier à Strasbourg.",
+      "note": "Carrousel : beaucoup d'enregistrements."
+    },
+    {
+      "but": "int",
+      "desLaPhase": 1,
+      "titre": "Note la coupe sur 10",
+      "hook": "Sois honnête : sur 10 ?",
+      "plans": "Reveal seul, 5 à 7 s",
+      "legende": "Note sur 10, je réponds à tout le monde.",
+      "note": "Réponds à chaque commentaire dans l'heure."
+    },
+    {
+      "but": "int",
+      "desLaPhase": 1,
+      "titre": "Vous auriez fait quoi ?",
+      "hook": "Il m'a laissé carte blanche",
+      "plans": "Avant 2 s, 3 options écrites à l'écran, résultat",
+      "legende": "Option 1, 2 ou 3 ? Je te dis en commentaire ce que j'ai choisi.",
+      "note": "Ton reel du 20 août avec cette question a fait 3 431 vues et 8 commentaires."
+    },
+    {
+      "but": "int",
+      "desLaPhase": 2,
+      "titre": "Ma première coupe vs aujourd'hui",
+      "hook": "Ma toute première coupe vs maintenant",
+      "plans": "Vieille photo, coupe du jour, question finale",
+      "legende": "Et toi, t'as commencé quoi cette année ?",
+      "note": "Le parallélisme de la formation SPARTA."
+    },
+    {
+      "but": "int",
+      "desLaPhase": 3,
+      "titre": "Micro-trottoir Strasbourg",
+      "hook": "C'est qui le meilleur barbier de Strasbourg ?",
+      "plans": "Passants place Kléber, coupe offerte au gagnant",
+      "legende": "On a demandé dans la rue. La réponse en fin de vidéo.",
+      "note": "Demande l'accord des personnes filmées."
+    },
+    {
+      "but": "emo",
+      "desLaPhase": 1,
+      "titre": "Défi 10K, Jour X",
+      "hook": "Jour 1 : 645 abonnés",
+      "plans": "Facecam 8 s, puis la transfo du jour, compteur à l'écran",
+      "legende": "Je documente ma route de 645 à 10 000. Abonne-toi pour voir si j'y arrive.",
+      "note": "La série qui transforme les vues en abonnés."
+    },
+    {
+      "but": "emo",
+      "desLaPhase": 1,
+      "titre": "Entretien demain 9h",
+      "hook": "Il a un entretien d'embauche demain",
+      "plans": "Sans facecam, l'histoire en texte, musique douce, reveal",
+      "legende": "Un entretien cette semaine ? Je te garde un créneau.",
+      "note": "Raconte l'histoire du client, avec son accord."
+    },
+    {
+      "but": "emo",
+      "desLaPhase": 1,
+      "titre": "Ça faisait 2 ans",
+      "hook": "2 ans sans passer chez le barbier",
+      "plans": "Avant longue durée, process, reveal",
+      "legende": "2 ans d'attente pour ça. Ça valait le coup ?",
+      "note": "Ton reel du 28 mai sur ce thème a fait 3 451 vues."
+    },
+    {
+      "but": "emo",
+      "desLaPhase": 2,
+      "titre": "Le joueur avant le match",
+      "hook": "Il joue ce soir au Rhénus",
+      "plans": "Coupe calme, regard concentré, sortie du salon",
+      "legende": "Frais avant le match. Allez la SIG.",
+      "note": "Ta coupe de l'équipe de France U22 a fait 12 800 vues. Accord du joueur obligatoire."
+    },
+    {
+      "but": "emo",
+      "desLaPhase": 2,
+      "titre": "Le temps passe, le niveau aussi",
+      "hook": "Mes coupes il y a 1 an vs aujourd'hui",
+      "plans": "Montage des anciennes coupes puis des récentes",
+      "legende": "Et j'ai pas fini.",
+      "note": "Ton reel du 8 août sur ce thème a fait 6 144 vues."
+    },
+    {
+      "but": "rec",
+      "desLaPhase": 2,
+      "titre": "La coupe offerte du mois",
+      "hook": "Je t'offre ta prochaine coupe",
+      "plans": "Toi face caméra, règles à l'écran",
+      "legende": "Pour participer : like, partage en story, tag 2 potes. Tirage le 1er.",
+      "note": "Donne pour mieux recevoir."
+    },
+    {
+      "but": "rec",
+      "desLaPhase": 3,
+      "titre": "Vous l'avez nominé",
+      "hook": "Vous l'avez nominé, je l'ai coupé",
+      "plans": "Histoire de l'abonné, transfo, réaction",
+      "legende": "Nomine quelqu'un qui mérite une coupe offerte en commentaire.",
+      "note": "Émotion + interaction en un seul reel."
+    },
+    {
+      "but": "ven",
+      "desLaPhase": 1,
+      "titre": "Il reste X créneaux",
+      "hook": "Plus que 4 places cette semaine",
+      "plans": "Best-of de la semaine + lien",
+      "legende": "Réserve sur Planity, lien en bio. The Barbers, Illkirch.",
+      "note": "À poster le 20 et le 5 du mois."
+    },
+    {
+      "but": "ven",
+      "desLaPhase": 1,
+      "titre": "Collab avec le salon",
+      "hook": "Le nouveau du salon",
+      "plans": "Coupe filmée par le salon, publié en collaboration",
+      "legende": "Victor à The Barbers Illkirch. RDV en bio.",
+      "note": "Ta collab de septembre : 22 300 vues, ton record."
+    },
+    {
+      "but": "ven",
+      "desLaPhase": 3,
+      "titre": "Je coupe une figure de Strasbourg",
+      "hook": "J'ai coupé [nom] avant son match",
+      "plans": "Post collaboratif publié sur les deux comptes",
+      "legende": "Merci pour la confiance. RDV en bio.",
+      "note": "Un par mois en phase 3."
+    }
+  ],
+  "reelsEssai": [
+    {
+      "titre": "Carte blanche",
+      "hook": "« Il m'a dit : fais ce que tu veux »",
+      "deroule": "Avant, tondeuse, reveal 360° sur le drop",
+      "cta": "Note sur 10, je réponds à tout le monde"
+    },
+    {
+      "titre": "Le rattrapage",
+      "hook": "« Il sortait de chez un autre barbier... »",
+      "deroule": "Zoom sur le défaut, réparation accélérée, reveal",
+      "cta": "Envoie ça au pote qui se fait rater"
+    },
+    {
+      "titre": "0 ou 0,5",
+      "hook": "« Dégradé à 0 ou à 0,5 : regarde »",
+      "deroule": "Écran partagé, un côté de chaque",
+      "cta": "Team 0 ou team 0,5 ?"
+    },
+    {
+      "titre": "Avant le match",
+      "hook": "« Il joue ce soir au Rhénus »",
+      "deroule": "Coupe calme, concentration, sortie",
+      "cta": "Allez la SIG"
+    },
+    {
+      "titre": "Mets le son",
+      "hook": "« Mets le son. »",
+      "deroule": "15 s de tondeuse et rasoir en très gros plan",
+      "cta": "Le son le plus satisfaisant de Strasbourg ?"
+    },
+    {
+      "titre": "La phrase interdite",
+      "hook": "« La phrase que tous les barbiers détestent »",
+      "deroule": "Client : juste un petit peu sur les côtés, regard caméra",
+      "cta": "Tag celui qui dit toujours ça"
+    },
+    {
+      "titre": "Jour 1 du défi",
+      "hook": "« J'ai 645 abonnés. Objectif : 10 000. »",
+      "deroule": "Facecam 8 s puis la transfo du jour",
+      "cta": "Abonne-toi pour voir si j'y arrive"
+    },
+    {
+      "titre": "Le meilleur de Strasbourg",
+      "hook": "« C'est qui le meilleur barbier de Strasbourg ? »",
+      "deroule": "Transfo rapide, question qui reste à l'écran",
+      "cta": "Cite ton barbier, je réponds à tous"
+    }
+  ],
+  "montage": {
+    "instructionsProjet": "Tu es le monteur de Victor (Viktus Blendz), barbier à The Barbers Illkirch, près de Strasbourg. Compte Instagram : @viktusblendz.\n\nFORMAT\n- Vertical 1080 x 1920, 30 images/s, MP4 (H.264).\n- Durée : 7 à 20 secondes sauf si je demande autre chose.\n- Aucune musique dans le fichier : je l'ajoute dans Instagram.\n- Aucun filigrane, aucun logo d'application.\n\nSTRUCTURE D'UNE TRANSFO\n- 0 à 1 s : l'avant, le client de face. Le hook est lisible dès la première image.\n- Process : plans courts de 0,5 à 1,5 s, je garde le vrai son de la tondeuse.\n- Reveal sur un temps fort (360° sur la chaise ou face au miroir).\n- Fin : la réaction du client.\n\nTEXTE À L'ÉCRAN\n- Hook en haut, dans le tiers supérieur : police grasse sans serif, blanc avec contour noir, 2 lignes maximum.\n- Rien d'important dans les 14 % du haut ni dans les 35 % du bas (interface d'Instagram).\n\nSOUS-TITRES\n- Si quelqu'un parle : sous-titres mot à mot, gros, centrés, au-dessus de la zone du bas.\n\nCOULEUR\n- Naturelle, contraste léger, peau jamais jaune ni orange.\n\nAVANT DE ME LIVRER\n- Vérifie toi-même la première image, le reveal et la dernière image.\n- Donne-moi aussi : 3 hooks alternatifs, 1 légende qui contient « Strasbourg » et finit par une question, 3 à 5 hashtags dont #barbierstrasbourg.",
+    "prompts": [
+      {
+        "titre": "La Transfo",
+        "texte": "Voici les rushes d'une transfo, dans l'ordre : avant, process, reveal, réaction.\nCoupe : [type de coupe, ex : burst fade + contour]\nHook à l'écran : « [ton hook] »\nMonte un reel de 12 à 15 s en suivant les instructions du projet."
+      },
+      {
+        "titre": "Réel d'essai (variante)",
+        "texte": "Fais une vraie variante du reel précédent pour un réel d'essai : nouveau hook « [autre hook] », ordre des plans différent (commence par le geste le plus impressionnant), texte différent. Ce ne doit pas être le même fichier reposté."
+      },
+      {
+        "titre": "30 min en 30 s",
+        "texte": "Voici la coupe complète. Accélère-la pour tenir en 25 à 30 s, garde le vrai son, ralentis le reveal à la fin. Hook : « Un dégradé du début à la fin »."
+      },
+      {
+        "titre": "Facecam sous-titrée",
+        "texte": "Voici ma vidéo face caméra. Coupe les silences et les hésitations, garde un rythme rapide, ajoute des sous-titres mot à mot. Hook en haut : « [ton hook] »."
+      },
+      {
+        "titre": "Défi 10K, Jour X",
+        "texte": "Monte l'épisode du Défi 10K : ma facecam d'abord, puis la transfo du jour. Ajoute en haut un compteur fixe « JOUR [X] · [abonnés] ABONNÉS »."
+      },
+      {
+        "titre": "Légendes",
+        "texte": "Écris 3 légendes courtes pour ce reel : [décris la coupe et le client]. Chaque légende contient « Strasbourg », finit par une question ou un appel à réserver, et je veux 3 à 5 hashtags dont #barbierstrasbourg."
+      }
+    ]
+  },
+  "regles2026": [
+    {
+      "titre": "Fais un contenu qu'on envoie à un pote.",
+      "detail": "Les partages en message privé pèsent le plus pour toucher des gens qui ne te suivent pas. Le temps de visionnage et les likes comptent aussi.",
+      "source": "https://www.zoomsphere.com/blog/instagram-algorithm-2026-what-actually-gets-reach"
+    },
+    {
+      "titre": "Les commentaires comptent moins qu'on croit.",
+      "detail": "Instagram l'a redit en octobre 2026 : ce qui compte surtout, c'est ce que les gens partagent. Réponds quand même à tout : Buffer mesure +21 % d'engagement quand le compte répond.",
+      "source": "https://buffer.com/resources/instagram-algorithms/"
+    },
+    {
+      "titre": "Toujours du contenu original.",
+      "detail": "Jamais de filigrane d'une autre appli (CapCut, TikTok) et jamais reposter le contenu des autres : Instagram met en avant l'original.",
+      "source": "https://www.zoomsphere.com/blog/instagram-algorithm-2026-what-actually-gets-reach"
+    },
+    {
+      "titre": "Les hashtags servent à la recherche, pas à la portée.",
+      "detail": "3 à 5 maximum, dont #barbierstrasbourg. Mets « Strasbourg » dans la légende et géolocalise chaque post.",
+      "source": "https://www.zoomsphere.com/blog/instagram-algorithm-2026-what-actually-gets-reach"
+    },
+    {
+      "titre": "Programmer un reel ne fait pas baisser sa portée.",
+      "detail": "Tu peux tout monter le dimanche et tout programmer.",
+      "source": "https://metricool.com/instagram-news/"
+    },
+    {
+      "titre": "La moitié des vidéos sont regardées sans le son.",
+      "detail": "Texte à l'écran dès la première image et sous-titres dès que tu parles.",
+      "source": "https://buffer.com/resources/instagram-algorithms/"
+    },
+    {
+      "titre": "Réels d'essai : oui, mais jamais le même fichier.",
+      "detail": "Plusieurs essais par jour sont autorisés, mais reposter le même reel en essai est sanctionné, et Instagram plafonne le nombre d'essais par mois.",
+      "source": "https://metricool.com/instagram-news/"
+    },
+    {
+      "titre": "La régularité paie.",
+      "detail": "Les comptes qui publient régulièrement font près de 5 fois plus d'engagement par post (étude Buffer, toutes plateformes).",
+      "source": "https://buffer.com/resources/instagram-algorithms/"
+    }
+  ],
+  "exemplesTodo": {
+    "2026-11-17": [
+      {
+        "id": "kit",
+        "type": "routine",
+        "titre": "Filmer le kit 4 plans sur le client du jour"
+      },
+      {
+        "id": "post_tue",
+        "type": "post",
+        "titre": "Publier le reel Transfo"
+      },
+      {
+        "id": "stories",
+        "type": "routine",
+        "titre": "3 stories : ta vie, le salon, un conseil"
+      },
+      {
+        "id": "reply",
+        "type": "routine",
+        "titre": "Répondre à tous les commentaires et messages"
+      },
+      {
+        "id": "source",
+        "type": "routine",
+        "titre": "Demander aux nouveaux clients : « tu m'as trouvé comment ? »"
+      }
+    ],
+    "2026-11-18": [
+      {
+        "id": "kit",
+        "type": "routine",
+        "titre": "Filmer le kit 4 plans sur le client du jour"
+      },
+      {
+        "id": "stories",
+        "type": "routine",
+        "titre": "3 stories : ta vie, le salon, un conseil"
+      },
+      {
+        "id": "reply",
+        "type": "routine",
+        "titre": "Répondre à tous les commentaires et messages"
+      },
+      {
+        "id": "source",
+        "type": "routine",
+        "titre": "Demander aux nouveaux clients : « tu m'as trouvé comment ? »"
+      }
+    ],
+    "2026-11-19": [
+      {
+        "id": "kit",
+        "type": "routine",
+        "titre": "Filmer le kit 4 plans sur le client du jour"
+      },
+      {
+        "id": "post_thu",
+        "type": "post",
+        "titre": "Publier le reel Interaction ou Émotion"
+      },
+      {
+        "id": "mep",
+        "type": "routine",
+        "titre": "Séquence MEP en stories"
+      },
+      {
+        "id": "stories",
+        "type": "routine",
+        "titre": "3 stories : ta vie, le salon, un conseil"
+      },
+      {
+        "id": "reply",
+        "type": "routine",
+        "titre": "Répondre à tous les commentaires et messages"
+      },
+      {
+        "id": "source",
+        "type": "routine",
+        "titre": "Demander aux nouveaux clients : « tu m'as trouvé comment ? »"
+      }
+    ],
+    "2026-11-20": [
+      {
+        "id": "kit",
+        "type": "routine",
+        "titre": "Filmer le kit 4 plans sur le client du jour"
+      },
+      {
+        "id": "facecam",
+        "type": "routine",
+        "titre": "Filmer 30 s face caméra pour le Défi 10K"
+      },
+      {
+        "id": "stories",
+        "type": "routine",
+        "titre": "3 stories : ta vie, le salon, un conseil"
+      },
+      {
+        "id": "reply",
+        "type": "routine",
+        "titre": "Répondre à tous les commentaires et messages"
+      },
+      {
+        "id": "source",
+        "type": "routine",
+        "titre": "Demander aux nouveaux clients : « tu m'as trouvé comment ? »"
+      },
+      {
+        "id": "sell",
+        "type": "post",
+        "titre": "Jour de vente : « il reste X créneaux »"
+      }
+    ],
+    "2026-11-21": [
+      {
+        "id": "kit",
+        "type": "routine",
+        "titre": "Filmer le kit 4 plans sur le client du jour"
+      },
+      {
+        "id": "post_sat",
+        "type": "post",
+        "titre": "Publier le reel du samedi"
+      },
+      {
+        "id": "stories",
+        "type": "routine",
+        "titre": "3 stories : ta vie, le salon, un conseil"
+      },
+      {
+        "id": "reply",
+        "type": "routine",
+        "titre": "Répondre à tous les commentaires et messages"
+      },
+      {
+        "id": "source",
+        "type": "routine",
+        "titre": "Demander aux nouveaux clients : « tu m'as trouvé comment ? »"
+      }
+    ],
+    "2026-11-22": [
+      {
+        "id": "edit",
+        "type": "routine",
+        "titre": "Session montage d'1 heure avec Claude"
+      },
+      {
+        "id": "log",
+        "type": "routine",
+        "titre": "Noter les résultats des reels dans le carnet des hooks"
+      }
+    ],
+    "2026-11-23": [
+      {
+        "id": "followers",
+        "type": "routine",
+        "titre": "Relever ton nombre d'abonnés dans Suivi"
+      },
+      {
+        "id": "story_mon",
+        "type": "routine",
+        "titre": "1 story de ta vie hors salon"
+      }
+    ],
+    "2027-01-06": [
+      {
+        "id": "kit",
+        "type": "routine",
+        "titre": "Filmer le kit 4 plans sur le client du jour"
+      },
+      {
+        "id": "trial_wed",
+        "type": "trial",
+        "titre": "Publier un réel d'essai"
+      },
+      {
+        "id": "stories",
+        "type": "routine",
+        "titre": "3 stories : ta vie, le salon, un conseil"
+      },
+      {
+        "id": "reply",
+        "type": "routine",
+        "titre": "Répondre à tous les commentaires et messages"
+      },
+      {
+        "id": "source",
+        "type": "routine",
+        "titre": "Demander aux nouveaux clients : « tu m'as trouvé comment ? »"
+      }
+    ],
+    "2027-03-10": [
+      {
+        "id": "kit",
+        "type": "routine",
+        "titre": "Filmer le kit 4 plans sur le client du jour"
+      },
+      {
+        "id": "post_wed",
+        "type": "post",
+        "titre": "Publier un reel"
+      },
+      {
+        "id": "trial_wed",
+        "type": "trial",
+        "titre": "Publier un réel d'essai"
+      },
+      {
+        "id": "stories",
+        "type": "routine",
+        "titre": "3 stories : ta vie, le salon, un conseil"
+      },
+      {
+        "id": "reply",
+        "type": "routine",
+        "titre": "Répondre à tous les commentaires et messages"
+      },
+      {
+        "id": "source",
+        "type": "routine",
+        "titre": "Demander aux nouveaux clients : « tu m'as trouvé comment ? »"
+      }
+    ],
+    "2027-06-05": [
+      {
+        "id": "kit",
+        "type": "routine",
+        "titre": "Filmer le kit 4 plans sur le client du jour"
+      },
+      {
+        "id": "post_sat",
+        "type": "post",
+        "titre": "Publier le reel du samedi"
+      },
+      {
+        "id": "carousel",
+        "type": "carousel",
+        "titre": "Publier un carrousel avant/après"
+      },
+      {
+        "id": "stories",
+        "type": "routine",
+        "titre": "3 stories : ta vie, le salon, un conseil"
+      },
+      {
+        "id": "reply",
+        "type": "routine",
+        "titre": "Répondre à tous les commentaires et messages"
+      },
+      {
+        "id": "source",
+        "type": "routine",
+        "titre": "Demander aux nouveaux clients : « tu m'as trouvé comment ? »"
+      },
+      {
+        "id": "sell",
+        "type": "post",
+        "titre": "Jour de vente : « il reste X créneaux »"
+      }
+    ]
+  }
+}

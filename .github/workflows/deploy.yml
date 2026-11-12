@@ -1,0 +1,59 @@
+name: Tests et mise en ligne
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Le site est servi sous https://<compte>.github.io/viktus-10k/
+  BASE_PATH: /viktus-10k/
+  # Adresse et clé publique du projet Supabase : des variables du dépôt, pas des secrets.
+  # La clé « publishable » est faite pour être publique, les règles d'accès protègent les données.
+  VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+  VITE_SUPABASE_KEY: ${{ vars.VITE_SUPABASE_KEY }}
+
+jobs:
+  verifier:
+    name: Vérifier et construire
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npx playwright install --with-deps webkit chromium
+      # Les parcours construisent le site sur un backend en mémoire et le testent sous /viktus-10k/.
+      - run: npm run e2e
+      # Le site mis en ligne est reconstruit ensuite, branché sur Supabase.
+      - run: npm run build
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  publier:
+    name: Mettre en ligne
+    needs: verifier
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - id: deploiement
+        uses: actions/deploy-pages@v5

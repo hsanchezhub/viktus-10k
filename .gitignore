@@ -1,0 +1,16 @@
+node_modules/
+dist/
+
+# Secrets : jamais dans le dépôt
+.env
+.env.*
+!.env.example
+
+# Tests et captures
+test-results/
+playwright-report/
+captures/
+
+# Outils locaux
+.claude/
+.DS_Store
