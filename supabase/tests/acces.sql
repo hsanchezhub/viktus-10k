@@ -21,6 +21,7 @@ values ('aaaaaaaa-0000-4000-8000-0000000c4ea7', 'createur-a@test.local'),
 do $$
 declare
   coach_a constant uuid := 'aaaaaaaa-0000-4000-8000-00000000c0ac';
+  coach_b constant uuid := 'bbbbbbbb-0000-4000-8000-00000000c0ac';
   creator_a constant uuid := 'aaaaaaaa-0000-4000-8000-0000000c4ea7';
   creator_b constant uuid := 'bbbbbbbb-0000-4000-8000-0000000c4ea7';
   found_rows integer;
@@ -44,6 +45,10 @@ begin
 
   select count(*) into found_rows from public.programs where creator_id = creator_a and coach_id = coach_a;
   if found_rows <> 1 then raise exception 'ECHEC : le programme ne relie pas le créateur à son coach'; end if;
+
+  -- Une invitation en attente, envoyée par le coach B : seul lui doit la voir.
+  insert into public.invitations (email, role, display_name, invited_by)
+  values ('en-attente@test.local', 'creator', 'En attente', coach_b);
 
   -- ----- Le créateur A -----
   perform set_config('role', 'authenticated', true);
@@ -75,12 +80,9 @@ begin
   select count(*) into found_rows from public.profiles;
   if found_rows <> 2 then raise exception 'ECHEC : le créateur devrait voir 2 profils (lui et son coach), il en voit %', found_rows; end if;
 
-  refused := false;
-  begin
-    perform 1 from public.invitations;
-  exception when insufficient_privilege then refused := true;
-  end;
-  if not refused then raise exception 'ECHEC : les invitations sont lisibles depuis le site'; end if;
+  -- Depuis le coaching, un coach lit ses propres invitations : les autres comptes n'en voient aucune.
+  select count(*) into found_rows from public.invitations;
+  if found_rows <> 0 then raise exception 'ECHEC : un créateur voit une invitation qui n''est pas la sienne'; end if;
 
   -- ----- Le coach A -----
   perform set_config('request.jwt.claims', json_build_object('sub', coach_a, 'role', 'authenticated')::text, true);
@@ -143,6 +145,13 @@ begin
   exception when insufficient_privilege then refused := true;
   end;
   if not refused then raise exception 'ECHEC : les profils sont lisibles sans connexion'; end if;
+
+  refused := false;
+  begin
+    perform 1 from public.invitations;
+  exception when insufficient_privilege then refused := true;
+  end;
+  if not refused then raise exception 'ECHEC : les invitations sont lisibles sans connexion'; end if;
 
   perform set_config('role', 'none', true);
 end;

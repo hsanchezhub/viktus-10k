@@ -38,6 +38,17 @@ export function todayInParis(now: Date = new Date()): IsoDate {
   return `${read("year")}-${read("month")}-${read("day")}`;
 }
 
+const parisHour = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/Paris",
+  hour: "2-digit",
+  hourCycle: "h23",
+});
+
+/** L'heure qu'il est à Paris, de 0 à 23. */
+export function hourInParis(now: Date = new Date()): number {
+  return Number(parisHour.format(now));
+}
+
 function splitIso(date: IsoDate): { year: number; month: number; day: number } {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(date);
   if (!match) throw new Error(`Date invalide : ${date}`);

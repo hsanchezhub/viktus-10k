@@ -4,12 +4,14 @@ import { Navigate, Outlet, ScrollRestoration, useLocation } from "react-router";
 import type { Account } from "../data/backend";
 import { useAccount } from "../data/context";
 import { useTracking, useWorkspace } from "../data/queries";
+import { usePushSync } from "../features/notifications/usePush";
 import { SettingsSheet } from "../features/settings/SettingsSheet";
 import { ToastProvider } from "../ui/Toast";
 import { Ambient } from "./Ambient";
 import { SideRail, TabBar, TopBar } from "./Chrome";
 import { LoadError, Splash } from "./Fallbacks";
 import { JourneyProvider, useJourney } from "./journey";
+import { OfflineNotice } from "./OfflineNotice";
 import { LOGIN_PATH } from "./sections";
 
 /** Porte d'entrée du site : sans compte connecté, direction l'écran de connexion. */
@@ -56,6 +58,8 @@ function Frame({ account }: { account: Account }) {
   const { pathname } = useLocation();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const openSettings = () => setSettingsOpen(true);
+  // Seul le créateur reçoit des notifications.
+  usePushSync(workspace.role === "creator");
 
   return (
     <>
@@ -67,6 +71,7 @@ function Frame({ account }: { account: Account }) {
       <SideRail role={workspace.role} phase={phase} onOpenSettings={openSettings} />
 
       <main id="contenu" className="app-main">
+        <OfflineNotice role={workspace.role} />
         <motion.div
           key={pathname}
           className="mx-auto max-w-[620px] lg:max-w-[1180px]"

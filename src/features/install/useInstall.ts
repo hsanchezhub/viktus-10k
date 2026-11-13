@@ -5,7 +5,8 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
-function isOnHomeScreen(): boolean {
+/** Vrai si le site tourne depuis l'écran d'accueil, comme une appli. */
+export function isOnHomeScreen(): boolean {
   const iosStandalone = (navigator as Navigator & { standalone?: boolean }).standalone === true;
   return iosStandalone || window.matchMedia("(display-mode: standalone)").matches;
 }

@@ -50,6 +50,7 @@ export interface Database {
           created_at: string;
         },
         {
+          id?: string;
           creator_id: string;
           day: string;
           kind: string;
@@ -80,6 +81,12 @@ export interface Database {
         },
         { email: string; role: string; display_name: string; invited_by: string }
       >;
+      push_devices: Table<
+        { id: string; user_id: string; endpoint: string; p256dh: string; auth: string },
+        { endpoint: string; p256dh: string; auth: string }
+      >;
+      // Seule la clé publique est lisible par le site.
+      push_server: Table<{ public_key: string | null }, never>;
     };
     Views: Record<never, never>;
     Functions: Record<never, never>;

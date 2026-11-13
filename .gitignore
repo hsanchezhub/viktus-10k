@@ -11,6 +11,9 @@ test-results/
 playwright-report/
 captures/
 
+# Fonction Supabase assemblée (npm run build:function)
+supabase/.bundle/
+
 # Outils locaux
 .claude/
 .DS_Store

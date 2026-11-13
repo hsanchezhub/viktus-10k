@@ -5,6 +5,8 @@ import { setTheme, useTheme } from "../../lib/theme";
 import { InstallIcon, LogoutIcon, MoonIcon, SunIcon } from "../../ui/icons";
 import { Sheet } from "../../ui/Sheet";
 import { useInstall } from "../install/useInstall";
+import { PushSettings } from "../notifications/PushSettings";
+import { forgetThisDevice } from "../notifications/usePush";
 
 interface SettingsSheetProps {
   open: boolean;
@@ -40,6 +42,13 @@ export function SettingsSheet({ open, onClose, account, workspace }: SettingsShe
   const theme = useTheme();
   const install = useInstall();
   const nextTheme = theme === "dark" ? "light" : "dark";
+  const { program } = workspace;
+
+  async function signOut() {
+    // L'appareil ne doit plus recevoir les notifications d'un compte qui n'y est plus connecté.
+    await forgetThisDevice(backend).catch(() => {});
+    await backend.signOut();
+  }
 
   return (
     <Sheet open={open} onClose={onClose} title="Réglages">
@@ -48,11 +57,13 @@ export function SettingsSheet({ open, onClose, account, workspace }: SettingsShe
           <p className="eyebrow">{roleLabel[workspace.role]}</p>
           <p className="mt-1 font-extrabold">{workspace.displayName}</p>
           <p className="truncate text-[13.5px] text-muted">{account.email}</p>
-          <button type="button" className="btn mt-3" onClick={() => void backend.signOut()}>
+          <button type="button" className="btn mt-3" onClick={() => void signOut()}>
             <LogoutIcon width={16} height={16} />
             Se déconnecter
           </button>
         </section>
+
+        {workspace.role === "creator" && program && <PushSettings coachName={program.coachName} />}
 
         <section className="well p-4">
           <p className="eyebrow mb-3">Affichage</p>

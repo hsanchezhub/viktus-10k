@@ -10,6 +10,7 @@ import { formatNumber } from "../../lib/format";
 import { FadeGauge } from "../../ui/FadeGauge";
 import { Panel } from "../../ui/Panel";
 import { TaskRow } from "../../ui/TaskRow";
+import { PushNudge } from "../notifications/PushNudge";
 import { CoachWord } from "./CoachWord";
 
 const FIRSTS_SHOWN = 5;
@@ -39,11 +40,14 @@ export function TodayScreen() {
     <div className="grid gap-4 lg:grid-cols-12 lg:gap-5">
       <Hero journey={journey} className="lg:col-span-12 lg:mb-2" />
       {journey.canEdit && (
-        <CoachWord
-          creatorId={program.creatorId}
-          coachName={program.coachName}
-          className="lg:col-span-12"
-        />
+        <>
+          <CoachWord
+            creatorId={program.creatorId}
+            coachName={program.coachName}
+            className="lg:col-span-12"
+          />
+          <PushNudge coachName={program.coachName} className="lg:col-span-12" />
+        </>
       )}
       {launched && <DayTasks journey={journey} className="lg:col-span-7 lg:row-span-2" />}
       <PhaseGoal journey={journey} className={launched ? "lg:col-span-5" : "lg:col-span-6"} />

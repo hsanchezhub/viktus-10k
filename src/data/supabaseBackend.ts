@@ -79,7 +79,10 @@ export function createSupabaseBackend(): Backend {
     },
 
     onAccountChange(listener) {
-      const { data } = client.auth.onAuthStateChange((_event, session) => {
+      const { data } = client.auth.onAuthStateChange((event, session) => {
+        // L'état de départ est lu par getAccount. Sans réseau, Supabase l'annonce vide alors
+        // que la session existe toujours : on ne l'écoute pas.
+        if (event === "INITIAL_SESSION") return;
         listener(toAccount(session));
       });
       return () => data.subscription.unsubscribe();
@@ -206,13 +209,11 @@ export function createSupabaseBackend(): Backend {
     },
 
     async addHook(creatorId, hook) {
-      const { data, error } = await client
+      // Un hook déjà enregistré (envoi rejoué après une coupure) est laissé tel quel.
+      const { error } = await client
         .from("hooks")
-        .insert({ creator_id: creatorId, ...hook })
-        .select("id, creator_id, day, kind, hook, views, shares, follows")
-        .single();
+        .upsert({ creator_id: creatorId, ...hook }, { onConflict: "id", ignoreDuplicates: true });
       if (error) throw dataFailure(error);
-      return toHook(data);
     },
 
     async deleteHook(hookId) {
@@ -292,6 +293,23 @@ export function createSupabaseBackend(): Backend {
           forced_phase_from: override?.from ?? null,
         })
         .eq("creator_id", creatorId);
+      if (error) throw dataFailure(error);
+    },
+
+    async loadPushKey() {
+      const { data, error } = await client.from("push_server").select("public_key").maybeSingle();
+      if (error) throw dataFailure(error);
+      return data?.public_key ?? null;
+    },
+
+    async savePushDevice(device) {
+      // La base rattache l'appareil au compte connecté et remplace son ancien abonnement.
+      const { error } = await client.from("push_devices").insert(device);
+      if (error) throw dataFailure(error);
+    },
+
+    async forgetPushDevice(endpoint) {
+      const { error } = await client.from("push_devices").delete().eq("endpoint", endpoint);
       if (error) throw dataFailure(error);
     },
   };

@@ -127,7 +127,12 @@ const demoState = {
 };
 
 // scroll : part de la page défilée avant la capture (0 = haut de page).
+// push : état simulé des notifications (« on » par défaut, sans invitation à l'écran).
+// settings : ouvre les réglages. offline : coupe le réseau une fois la page affichée.
 const shots = [
+  { name: "notifications-invitation", path: "", scroll: 0, push: "off" },
+  { name: "notifications-reglages", path: "", scroll: 0, settings: true },
+  { name: "hors-ligne", path: "", scroll: 0, offline: true },
   { name: "connexion", path: "connexion", scroll: 0, signedOut: true },
   { name: "coach", path: "", scroll: 0, as: "demo-coach" },
   { name: "coach-suite", path: "", scroll: 0.7, as: "demo-coach" },
@@ -172,15 +177,32 @@ try {
       for (const shot of shots) {
         const context = await browser.newContext(profile.context);
         await context.addInitScript(
-          ([chosenTheme, state]) => {
+          ([chosenTheme, state, push]) => {
             localStorage.setItem("viktus:theme", chosenTheme);
             if (state) localStorage.setItem("viktus:demo", state);
+
+            // Le navigateur de capture n'a pas de vraies notifications : on fixe leur état.
+            const subscribed = push === "on";
+            const subscription = {
+              endpoint: "https://web.push.apple.com/capture",
+              toJSON: () => ({ endpoint: "https://web.push.apple.com/capture", keys: {} }),
+            };
+            Object.defineProperty(window, "Notification", {
+              configurable: true,
+              value: { permission: subscribed ? "granted" : "default" },
+            });
+            Object.defineProperty(window, "PushManager", { configurable: true, value: class {} });
+            Object.defineProperty(ServiceWorkerRegistration.prototype, "pushManager", {
+              configurable: true,
+              get: () => ({ getSubscription: async () => (subscribed ? subscription : null) }),
+            });
           },
           [
             theme,
             shot.signedOut
               ? null
               : JSON.stringify({ ...demoState, sessionUserId: shot.as ?? demoState.sessionUserId }),
+            shot.push ?? "on",
           ],
         );
         const page = await context.newPage();
@@ -193,6 +215,10 @@ try {
           const scrollable = document.documentElement.scrollHeight - window.innerHeight;
           window.scrollTo(0, scrollable * share);
         }, shot.scroll);
+        if (shot.settings) {
+          await page.getByRole("button", { name: "Réglages" }).filter({ visible: true }).click();
+        }
+        if (shot.offline) await context.setOffline(true);
         await page.waitForTimeout(SETTLE_MS);
         const suffix = theme === "light" ? "-clair" : "";
         await page.screenshot({ path: `${outDir}/${profile.name}-${shot.name}${suffix}.png` });

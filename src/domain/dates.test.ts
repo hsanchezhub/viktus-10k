@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatShort, todayInParis, yearOf } from "./dates";
+import { formatShort, hourInParis, todayInParis, yearOf } from "./dates";
 
 describe("todayInParis", () => {
   it("passe au lendemain dès minuit à Paris, en hiver (UTC+1)", () => {
@@ -10,6 +10,14 @@ describe("todayInParis", () => {
   it("passe au lendemain dès minuit à Paris, en été (UTC+2)", () => {
     expect(todayInParis(new Date("2027-06-30T21:59:00Z"))).toBe("2027-06-30");
     expect(todayInParis(new Date("2027-06-30T22:00:00Z"))).toBe("2027-07-01");
+  });
+});
+
+describe("hourInParis", () => {
+  it("donne l'heure de Paris, en hiver comme en été", () => {
+    expect(hourInParis(new Date("2026-11-16T07:00:00Z"))).toBe(8);
+    expect(hourInParis(new Date("2027-06-30T06:30:00Z"))).toBe(8);
+    expect(hourInParis(new Date("2026-11-15T23:00:00Z"))).toBe(0);
   });
 });
 

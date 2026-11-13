@@ -1,5 +1,5 @@
 import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
-import type { Account, Backend } from "./backend";
+import { type Account, type Backend, isNetworkError } from "./backend";
 
 const BackendContext = createContext<Backend | null>(null);
 
@@ -18,6 +18,31 @@ type AccountState = Account | null | undefined;
 
 const AccountContext = createContext<AccountState>(undefined);
 
+const REMEMBERED_ACCOUNT_KEY = "viktus:account";
+
+/** Le dernier compte connecté sur cet appareil : il permet d'ouvrir le site sans réseau. */
+function rememberedAccount(): Account | null {
+  try {
+    const raw = localStorage.getItem(REMEMBERED_ACCOUNT_KEY);
+    const found = raw ? (JSON.parse(raw) as Partial<Account>) : null;
+    if (typeof found?.userId === "string" && typeof found.email === "string") {
+      return { userId: found.userId, email: found.email };
+    }
+  } catch {
+    // Stockage indisponible ou illisible : personne n'est retenu.
+  }
+  return null;
+}
+
+function rememberAccount(account: Account | null): void {
+  try {
+    if (account) localStorage.setItem(REMEMBERED_ACCOUNT_KEY, JSON.stringify(account));
+    else localStorage.removeItem(REMEMBERED_ACCOUNT_KEY);
+  } catch {
+    // Stockage indisponible : le site marche quand même, mais pas sans réseau.
+  }
+}
+
 /** Suit le compte connecté, y compris quand la session change dans un autre onglet. */
 export function AccountProvider({ children }: { children: ReactNode }) {
   const backend = useBackend();
@@ -25,12 +50,20 @@ export function AccountProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let active = true;
+    const settle = (found: Account | null) => {
+      if (!active) return;
+      rememberAccount(found);
+      setAccount(found);
+    };
     backend
       .getAccount()
-      .then((found) => active && setAccount(found))
-      // Session illisible (réseau coupé au démarrage) : on demande de se reconnecter.
-      .catch(() => active && setAccount(null));
-    const stop = backend.onAccountChange((changed) => active && setAccount(changed));
+      .then(settle)
+      .catch((error: unknown) => {
+        // Sans réseau, la session ne peut pas être vérifiée : on garde le compte retenu,
+        // le site reste consultable. Toute autre erreur demande de se reconnecter.
+        if (active) setAccount(isNetworkError(error) ? rememberedAccount() : null);
+      });
+    const stop = backend.onAccountChange(settle);
     return () => {
       active = false;
       stop();

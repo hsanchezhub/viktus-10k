@@ -5,7 +5,6 @@ import {
   BackendError,
   type CoachMessage,
   emptyTracking,
-  type HookEntry,
   type Role,
   type Tracking,
 } from "./backend";
@@ -36,6 +35,8 @@ export interface DemoState {
   tracking: Tracking;
   messages: CoachMessage[];
   phaseOverride: PhaseOverride | null;
+  /** Adresses des appareils abonnés aux notifications. */
+  pushDevices: string[];
 }
 
 const initialState: DemoState = {
@@ -48,7 +49,12 @@ const initialState: DemoState = {
   tracking: emptyTracking,
   messages: [],
   phaseOverride: null,
+  pushDevices: [],
 };
+
+// Clé publique d'exemple (un point de la courbe P-256), sans serveur d'envoi derrière.
+const DEMO_PUSH_KEY =
+  "BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U";
 
 function read(): DemoState {
   try {
@@ -183,12 +189,11 @@ export function createMemoryBackend(): Backend {
     },
 
     async addHook(_creatorId, hook) {
-      const entry: HookEntry = { ...hook, id: crypto.randomUUID() };
       update((state) => {
-        state.tracking.hooks.push(entry);
+        if (state.tracking.hooks.some((known) => known.id === hook.id)) return;
+        state.tracking.hooks.push(hook);
         state.tracking.lastActivityAt = new Date().toISOString();
       });
-      return entry;
     },
 
     async deleteHook(hookId) {
@@ -261,6 +266,22 @@ export function createMemoryBackend(): Backend {
 
     async setPhaseOverride(_creatorId, override) {
       update((state) => (state.phaseOverride = override));
+    },
+
+    async loadPushKey() {
+      return DEMO_PUSH_KEY;
+    },
+
+    async savePushDevice(device) {
+      update((state) => {
+        if (!state.pushDevices.includes(device.endpoint)) state.pushDevices.push(device.endpoint);
+      });
+    },
+
+    async forgetPushDevice(endpoint) {
+      update((state) => {
+        state.pushDevices = state.pushDevices.filter((known) => known !== endpoint);
+      });
     },
   };
 }

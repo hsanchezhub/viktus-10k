@@ -87,6 +87,13 @@ export type BackendErrorCode =
   | "network"
   | "unknown";
 
+/** L'abonnement d'un appareil aux notifications, tel que le navigateur le fournit. */
+export interface PushDevice {
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+}
+
 export class BackendError extends Error {
   readonly code: BackendErrorCode;
 
@@ -95,6 +102,11 @@ export class BackendError extends Error {
     this.name = "BackendError";
     this.code = code;
   }
+}
+
+/** Vrai si l'échec vient du réseau : l'action peut être retentée telle quelle. */
+export function isNetworkError(error: unknown): boolean {
+  return error instanceof BackendError && error.code === "network";
 }
 
 export interface Backend {
@@ -112,7 +124,8 @@ export interface Backend {
   /** doneOn null : la première fois est décochée. */
   setFirst(creatorId: string, key: string, doneOn: IsoDate | null): Promise<void>;
   saveFollowers(creatorId: string, day: IsoDate, followers: number): Promise<void>;
-  addHook(creatorId: string, hook: NewHook): Promise<HookEntry>;
+  /** L'identifiant est choisi par le site : renvoyer deux fois le même hook n'en crée qu'un. */
+  addHook(creatorId: string, hook: HookEntry): Promise<void>;
   deleteHook(hookId: string): Promise<void>;
 
   /** Les messages du coach, du plus récent au plus ancien. */
@@ -129,4 +142,10 @@ export interface Backend {
 
   /** Force la phase à partir d'une date, ou revient au calendrier avec null. */
   setPhaseOverride(creatorId: string, override: PhaseOverride | null): Promise<void>;
+
+  /** Clé publique du serveur qui envoie les notifications. null tant qu'il n'est pas prêt. */
+  loadPushKey(): Promise<string | null>;
+  /** Rattache cet appareil au compte connecté : il recevra ses notifications. */
+  savePushDevice(device: PushDevice): Promise<void>;
+  forgetPushDevice(endpoint: string): Promise<void>;
 }

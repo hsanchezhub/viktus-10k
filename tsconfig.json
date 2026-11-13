@@ -17,5 +17,5 @@
     "noEmit": true,
     "types": ["vite/client"]
   },
-  "include": ["src", "content"]
+  "include": ["src", "content", "supabase/functions"]
 }

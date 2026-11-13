@@ -5,3 +5,8 @@ playwright-report
 reference
 package-lock.json
 *.md
+
+# Fichiers écrits par des outils (connecteur Supabase, skills)
+.mcp.json
+skills-lock.json
+supabase/.bundle

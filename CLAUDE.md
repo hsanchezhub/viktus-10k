@@ -142,11 +142,36 @@ Source : documentation « Instagram API with Instagram Login » sur developers.f
 - **En ligne** depuis le 12 novembre : https://hsanchezhub.github.io/viktus-10k/ (dépôt public `hsanchezhub/viktus-10k`). Chaque envoi sur `main` relance les tests puis la mise en ligne (`.github/workflows/deploy.yml`). L'adresse et la clé publique Supabase sont des variables du dépôt GitHub.
 - **Étape 1, socle** : validée par Hugo.
 - **Étape 2, comptes et données** : faite. Connexion, Aujourd'hui, Suivi, réglages. Vérifiée en vrai : Hugo a créé son compte coach.
-- **Étape 3, coaching** : construite le 12 novembre, en attente du feu vert d'Hugo. L'accueil du coach est l'écran Coach : chiffres clés, messages à Victor (avec « Lu » ou « Pas encore lu »), to-do du jour en lecture seule, 28 derniers jours, phase forcée, derniers hooks. Tant que Victor n'a pas de compte, cet écran sert à l'inviter. Côté Victor, le dernier message s'affiche en haut d'Aujourd'hui (« Le mot de Hugo »), avec l'historique.
-- **Supabase** : projet `viktus-10k` (référence `jcyufnhhfgfinoaapsha`, région Paris, offre gratuite), géré via le connecteur Supabase de Claude. Migrations dans `supabase/migrations/`. Règles d'accès vérifiées par `supabase/tests/acces.sql` et `supabase/tests/coaching.sql`, à rejouer après chaque migration. « Confirm email » est désactivé (sinon la création de compte est refusée).
-- **Reste à faire par Hugo** : inviter Victor depuis l'écran Coach dès qu'il a son e-mail, puis lui envoyer l'adresse du site.
-- **Pas encore vérifié** : le rendu sur un vrai iPhone. Les parcours automatiques tournent sur un backend en mémoire (`VITE_BACKEND=memory`), pas sur Supabase.
-- **Étape 4, à venir** : notifications (nouveau message du coach, rappels), hors ligne, écrans de démarrage iOS.
+- **Étape 3, coaching** : faite et en ligne. L'accueil du coach est l'écran Coach : chiffres clés, messages à Victor (avec « Lu » ou « Pas encore lu »), to-do du jour en lecture seule, 28 derniers jours, phase forcée, derniers hooks. Côté Victor, le dernier message s'affiche en haut d'Aujourd'hui (« Le mot de Hugo »), avec l'historique. Hugo et Victor ont chacun leur compte, reliés par un programme (relu dans la base le 13 novembre). Aucun message n'a encore été envoyé.
+- **Supabase** : projet `viktus-10k` (référence `jcyufnhhfgfinoaapsha`, région Paris, offre gratuite), géré via le connecteur Supabase de Claude (déclaré dans `.mcp.json`). Migrations dans `supabase/migrations/`. Règles d'accès vérifiées par `supabase/tests/*.sql`, à rejouer après chaque migration. « Confirm email » est désactivé (sinon la création de compte est refusée).
+- **Étape 4, notifications et hors ligne** : faite et en ligne depuis le 13 novembre. Côté Supabase : migration `0003_notifications` appliquée, fonction `push` déployée (sans vérification de JWT), clés d'envoi créées, tâche `viktus-rappels` planifiée à chaque heure pile. Voir « Étape 4 : ce qui a été installé et vérifié » plus bas.
+- **Pas encore vérifié** : le rendu sur un vrai iPhone, et l'arrivée d'une vraie notification sur un téléphone (le chiffrement et l'envoi vers Apple n'ont jamais tourné en vrai). Les parcours automatiques tournent sur un backend en mémoire (`VITE_BACKEND=memory`), pas sur Supabase.
+
+### Étape 4 : comment c'est fait
+
+- **Hors ligne.** Un service worker (`service-worker/sw.js`, complété à la construction par `service-worker/plugin.ts`) garde la page, son code et ses polices : le site s'ouvre sans réseau. Les données lues sont gardées une semaine dans le navigateur (`viktus:cache`). Une écriture du suivi est une simple donnée (`src/data/trackingWrites.ts`) : sans réseau elle attend, même site fermé, puis part au retour du réseau. Le dernier compte connecté est retenu (`viktus:account`) pour ouvrir le site sans réseau. Les actions du coach, elles, échouent tout de suite hors ligne.
+- **Notifications côté site** (`src/features/notifications/`). Seul le créateur en reçoit. Invitation à les activer sur Aujourd'hui, interrupteur dans les Réglages. Sur iPhone, elles n'existent que si le site est ouvert depuis l'écran d'accueil : l'écran l'explique. Se déconnecter désabonne l'appareil.
+- **Envoi** (`supabase/functions/push/`, migration `0003_notifications.sql`). La base « sonne » la fonction `push` à chaque nouveau message du coach (déclencheur) et à chaque heure pile (pg_cron), avec un jeton que seule la base connaît. La fonction chiffre et envoie elle-même (Web Push, sans dépendance), avec des clés qu'elle crée à son premier appel et qui ne sortent pas de la base. Elle réutilise les règles de la to-do du site (`src/domain`).
+- **Rappels** (heure de Paris, choix de Claude, à confirmer par Hugo) : to-do du matin à 8 h, qui devient une relance après 2 jours pleins sans rien saisir ; rappel de publication à 18 h s'il reste une publication à cocher ; rappel de montage le dimanche à 17 h si la session n'est pas cochée. Deux au plus par jour, un seul envoi par type et par jour (table `push_sent`).
+- **Écrans de démarrage iPhone** : `public/splash/`, générés avec les icônes (`npm run icons`).
+
+### Étape 4 : ce qui a été installé et vérifié (13 novembre 2026)
+
+- **Migration** `0003_notifications` : essai à blanc sans erreur, puis appliquée. Contrôlé par lecture : les trois tables `push_*` ont leurs règles d'accès, un compte connecté ne lit que `public_key` dans `push_server`, rien n'est ouvert sans connexion, la sonnette n'est appelable ni par `anon` ni par `authenticated`.
+- **Fonction `push`** : déployée depuis `supabase/.bundle/push/index.js` (`npm run build:function`), relue une fois en place. Elle répond 204 à la base (création des clés, puis passage « rappels ») et 401 à un appel sans jeton ou avec un mauvais jeton.
+- **Scripts de test** : `acces.sql` passe (lancé par Claude). `coaching.sql` et `notifications.sql` passent aussi, mais lancés par Hugo dans l'éditeur SQL de Supabase : c'est lui qui a lu le résultat. `acces.sql` a été corrigé au passage : il attendait encore que les invitations soient illisibles depuis le site, ce qui n'est plus vrai depuis le coaching (un coach lit les siennes).
+- **Tâche planifiée** `viktus-rappels` : présente et active dans `cron.job`.
+
+Ce qu'il faut savoir pour la suite :
+
+- **Confirmation Supabase.** Le connecteur laisse passer sans rien demander les lectures, les migrations simples et les scripts sans suppression. Dès qu'un texte SQL contient un `delete` ou un `drop` (donc `coaching.sql`, `notifications.sql`), il exige une confirmation à l'écran. Dans une conversation lancée par une autre conversation, cette fenêtre ne s'affiche pas et l'appel revient « declined ». Dans ce cas : copier le script (`pbcopy`), ouvrir l'éditeur SQL du tableau de bord (`https://supabase.com/dashboard/project/jcyufnhhfgfinoaapsha/sql/new`) et demander à Hugo de coller puis de cliquer sur Run. Ne pas réécrire le script pour contourner la confirmation.
+- **Conseils de sécurité de Supabase**, relevés après l'installation :
+  - `pg_net` est enregistrée dans le schéma `public` (ses fonctions vivent dans `net`, rien n'est exposé). Correction prête mais pas appliquée, car elle demande la confirmation décrite ci-dessus : une migration `0004` avec `drop extension pg_net; create extension pg_net with schema extensions;`. Rien n'en dépend en dur.
+  - `push_sent` a ses règles d'accès activées sans aucune règle : c'est voulu, seule la fonction y touche.
+  - La protection contre les mots de passe compromis est désactivée (réglage d'authentification, antérieur à cette étape).
+- **Détail sans gravité** : un coach peut remplir lui-même `notified_at` en écrivant un message directement dans la base, ce qui empêcherait seulement sa propre notification de partir.
+
+Reste à faire, avec Hugo et Victor : Victor ouvre le site depuis l'écran d'accueil de son iPhone et active les notifications, Hugo lui envoie un message depuis l'écran Coach, Victor doit recevoir « Nouveau message de ton coach ». En cas d'échec, regarder `net._http_response` et les journaux de la fonction `push`.
 
 ### Commandes
 
@@ -157,7 +182,8 @@ Source : documentation « Instagram API with Instagram Login » sur developers.f
 | `npm run e2e` | Parcours sur iPhone (WebKit) et ordinateur, sur le site construit sous `/viktus-10k/` |
 | `npm run lint`, `npm run typecheck`, `npm run format` | Qualité du code |
 | `npm run captures -- etape-N` | Captures dans `captures/etape-N/` |
-| `npm run icons` | Régénère les icônes |
+| `npm run icons` | Régénère les icônes et les écrans de démarrage iPhone |
+| `npm run build:function` | Assemble la fonction Supabase `push` dans `supabase/.bundle/` |
 
 ### Pièges de cette machine
 

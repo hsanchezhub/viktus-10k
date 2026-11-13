@@ -17,14 +17,17 @@
     "test": "vitest run",
     "e2e": "playwright test",
     "icons": "node scripts/generate-icons.mjs",
-    "captures": "node scripts/capture.mjs"
+    "captures": "node scripts/capture.mjs",
+    "build:function": "node scripts/build-function.mjs"
   },
   "dependencies": {
     "@fontsource-variable/manrope": "^5.3.0",
     "@fontsource/anton": "^5.3.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@supabase/supabase-js": "^2.119.0",
+    "@tanstack/query-sync-storage-persister": "^5.107.1",
     "@tanstack/react-query": "^5.107.1",
+    "@tanstack/react-query-persist-client": "^5.107.1",
     "motion": "^14.12.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
