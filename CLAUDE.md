@@ -160,7 +160,8 @@ Source : documentation « Instagram API with Instagram Login » sur developers.f
 - **Migration** `0003_notifications` : essai à blanc sans erreur, puis appliquée. Contrôlé par lecture : les trois tables `push_*` ont leurs règles d'accès, un compte connecté ne lit que `public_key` dans `push_server`, rien n'est ouvert sans connexion, la sonnette n'est appelable ni par `anon` ni par `authenticated`.
 - **Fonction `push`** : déployée depuis `supabase/.bundle/push/index.js` (`npm run build:function`), relue une fois en place. Elle répond 204 à la base (création des clés, puis passage « rappels ») et 401 à un appel sans jeton ou avec un mauvais jeton.
 - **Scripts de test** : `acces.sql` passe (lancé par Claude). `coaching.sql` et `notifications.sql` passent aussi, mais lancés par Hugo dans l'éditeur SQL de Supabase : c'est lui qui a lu le résultat. `acces.sql` a été corrigé au passage : il attendait encore que les invitations soient illisibles depuis le site, ce qui n'est plus vrai depuis le coaching (un coach lit les siennes).
-- **Tâche planifiée** `viktus-rappels` : présente et active dans `cron.job`.
+- **Tâche planifiée** `viktus-rappels` : présente et active dans `cron.job`. Elle a sonné toute seule à 17 h, 18 h et 19 h le 13 novembre, avec une réponse 204 à chaque fois dans `net._http_response`. Aucun rappel n'est parti, ce qui est normal : aucun appareil n'est encore abonné.
+- **Site** : mise en ligne réussie, `sw.js` répond, la page de connexion s'affiche et le service worker s'active (vérifié dans Chrome sur ordinateur).
 
 Ce qu'il faut savoir pour la suite :
 
