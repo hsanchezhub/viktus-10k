@@ -142,3 +142,14 @@ test("la phase forcée par le coach change la to-do du créateur dès ce jour-l�
   await expect(page.getByRole("checkbox", { name: /Publier un réel d'essai/ })).toBeVisible();
   await expect(page.getByText("Phase 2 · Le rythme")).toBeVisible();
 });
+
+test("avant le lancement, le coach voit la date de démarrage à la place de la to-do", async ({
+  page,
+}) => {
+  await onDay(page, "2026-11-13");
+  await signedIn(page, "coach");
+  await page.goto("./");
+
+  await expect(page.getByText("Démarrage lundi 16 nov. : rien à cocher d'ici là.")).toBeVisible();
+  await expect(page.getByText("nov..")).toHaveCount(0);
+});

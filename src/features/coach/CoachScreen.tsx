@@ -71,7 +71,8 @@ function Dashboard({ journey, program, coachId }: DashboardProps) {
       ) : (
         <Panel className="lg:col-span-5">
           <PanelTitle>La to-do du jour</PanelTitle>
-          <p className="text-muted">Le programme démarre {formatLong(start)}.</p>
+          {/* La date ne finit pas la phrase : une abréviation comme « nov. » porte déjà son point. */}
+          <p className="text-muted">Démarrage {formatLong(start)} : rien à cocher d'ici là.</p>
         </Panel>
       )}
       <Heatmap journey={journey} className="lg:col-span-5" />
